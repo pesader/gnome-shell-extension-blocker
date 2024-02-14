@@ -17,6 +17,7 @@
  */
 import GObject from 'gi://GObject';
 import GLib from 'gi://GLib';
+import Gio from 'gi://Gio';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
@@ -57,24 +58,36 @@ class ExampleIndicator extends SystemIndicator {
         this.quickSettingsItems.push(this._toggle);
     }
 
+    /**
+     * Launch a subprocess for the device. If the device becomes unpaired, it is
+     * assumed the device is no longer trusted and all subprocesses will be
+     * killed.
+     *
+     * @param {string[]} args - process arguments
+     * @param {Gio.Cancellable} [cancellable] - optional cancellable
+     * @return {Gio.Subprocess} The subprocess
+     */
+    _launchProcess(args, cancellable = null) {
+        let launcher = new Gio.SubprocessLauncher();
+
+        // Create and track the process
+        const proc = launcher.spawnv(args);
+        proc.wait_check_async(cancellable, this._processExit.bind(this._procs));
+        this._procs.add(proc);
+
+        return proc;
+    }
+
     _onChecked() {
         if (this._toggle.checked) {
             let command = 'pkexec hblock'
-            let [success, , stderr] = GLib.spawn_command_line_sync(command);
-
-            if (success)
-                Main.notify('hBlock', 'hBlock has been enabled');
-            else
-                Main.notify('hBlock', 'hBlock could not be enabled');
+            this._launchProcess(['/bin/sh', '-c', command]);
+            Main.notify('hBlock', 'hBlock has been enabled');
         }
         else {
             let command = 'pkexec hblock -S none -D none'
-            let [success, , stderr] = GLib.spawn_command_line_sync(command);
-
-            if (success)
-                Main.notify('hBlock', 'hBlock has been disabled');
-            else
-                Main.notify('hBlock', 'hBlock could not be disabled');
+            this._launchProcess(['/bin/sh', '-c', command]);
+            Main.notify('hBlock', 'hBlock has been disabled');
         }
     }
 });
