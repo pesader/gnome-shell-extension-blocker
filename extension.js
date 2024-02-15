@@ -109,12 +109,20 @@ class HBlockIndicator extends SystemIndicator {
 
 export default class QuickSettingsExampleExtension extends Extension {
     enable() {
-        this._indicator = new HBlockIndicator(this.path);
-        Main.panel.statusArea.quickSettings.addExternalIndicator(this._indicator);
+
+        // Check if hBlock is installed
+        if (GLib.find_program_in_path("hblock") === null) {
+            Main.notify('hblock','Error: hBlock not installed');
+        } else {
+            this._indicator = new HBlockIndicator(this.path);
+            Main.panel.statusArea.quickSettings.addExternalIndicator(this._indicator);
+        }
     }
 
     disable() {
-        this._indicator.quickSettingsItems.forEach(item => item.destroy());
-        this._indicator.destroy();
+        if (this._indicator) {
+            this._indicator.quickSettingsItems.forEach(item => item.destroy());
+            this._indicator.destroy();
+        }
     }
 }
