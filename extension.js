@@ -24,26 +24,35 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {Extension, gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 import {QuickToggle, SystemIndicator} from 'resource:///org/gnome/shell/ui/quickSettings.js';
 
-const ExampleToggle = GObject.registerClass(
-class ExampleToggle extends QuickToggle {
+const HBlockToggle = GObject.registerClass(
+class HBlockToggle extends QuickToggle {
     constructor() {
         super({
             title: _('hBlock'),
-            iconName: 'face-smile-symbolic',
             toggleMode: true,
         });
     }
 });
 
-const ExampleIndicator = GObject.registerClass(
-class ExampleIndicator extends SystemIndicator {
-    constructor() {
+const HBlockIndicator = GObject.registerClass(
+class HBlockIndicator extends SystemIndicator {
+    constructor(path) {
         super();
 
-        this._indicator = this._addIndicator();
-        this._indicator.iconName = 'face-smile-symbolic';
+        // Icons
+        this._icon = Gio.icon_new_for_string(
+            `${path}/icons/hblock-symbolic.svg`
+        );
+        this._iconAcquiring = Gio.icon_new_for_string(
+            `${path}/icons/hblock-acquiring-symbolic.svg`
+        );
 
-        this._toggle = new ExampleToggle();
+
+        this._indicator = this._addIndicator();
+        this._indicator.gicon = this._icon;
+
+        this._toggle = new HBlockToggle();
+        this._toggle.gicon = this._icon;
         this._toggle.connect ('notify::checked', () => this._onChecked ());
         // this._onChecked();
 
@@ -58,43 +67,49 @@ class ExampleIndicator extends SystemIndicator {
         this.quickSettingsItems.push(this._toggle);
     }
 
-    /**
-     * Launch a subprocess for the device. If the device becomes unpaired, it is
-     * assumed the device is no longer trusted and all subprocesses will be
-     * killed.
-     *
-     * @param {string[]} args - process arguments
-     * @param {Gio.Cancellable} [cancellable] - optional cancellable
-     * @return {Gio.Subprocess} The subprocess
-     */
-    _launchProcess(args, cancellable = null) {
-        let launcher = new Gio.SubprocessLauncher();
+    async _onChecked() {
+        // While commands are running, change the icon
+        this._indicator.gicon = this._iconAcquiring;
+        this._toggle.gicon = this._iconAcquiring;
 
-        // Create and track the process
-        const proc = launcher.spawnv(args);
-        proc.wait_check_async(cancellable, this._processExit.bind(this._procs));
-        this._procs.add(proc);
-
-        return proc;
-    }
-
-    _onChecked() {
         if (this._toggle.checked) {
-            let command = 'pkexec hblock'
-            this._launchProcess(['/bin/sh', '-c', command]);
-            Main.notify('hBlock', 'hBlock has been enabled');
+            try {
+                const command = 'pkexec hblock'
+                const proc = Gio.Subprocess.new(
+                    ['/bin/sh', '-c', command],
+                    Gio.SubprocessFlags.NONE
+                );
+
+                const success = await proc.wait_check_async(null);
+                Main.notify('hBlock', `hBlock ${success ? 'has been' : 'could not be'} enabled`);
+            } catch (e) {
+                logError(e);
+            }
         }
         else {
-            let command = 'pkexec hblock -S none -D none'
-            this._launchProcess(['/bin/sh', '-c', command]);
-            Main.notify('hBlock', 'hBlock has been disabled');
+            try {
+                const command = 'pkexec hblock -S none -D none'
+                const proc = Gio.Subprocess.new(
+                    ['/bin/sh', '-c', command],
+                    Gio.SubprocessFlags.NONE
+                );
+
+                const success = await proc.wait_check_async(null);
+                Main.notify('hBlock', `hBlock ${success ? 'has been' : 'could not be'} disabled`);
+            } catch (e) {
+                logError(e);
+            }
         }
+
+        // Change the icon back to normal
+        this._indicator.gicon = this._icon;
+        this._toggle.gicon = this._icon;
     }
 });
 
 export default class QuickSettingsExampleExtension extends Extension {
     enable() {
-        this._indicator = new ExampleIndicator();
+        this._indicator = new HBlockIndicator(this.path);
         Main.panel.statusArea.quickSettings.addExternalIndicator(this._indicator);
     }
 
