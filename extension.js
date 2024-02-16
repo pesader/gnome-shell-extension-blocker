@@ -78,36 +78,28 @@ class BlockerIndicator extends SystemIndicator {
         this._indicator.gicon = this._iconAcquiring;
         this._toggle.gicon = this._iconAcquiring;
 
-        if (this._toggle.checked) {
-            try {
-                const command = 'pkexec hblock'
-                const proc = Gio.Subprocess.new(
-                    ['/bin/sh', '-c', command],
-                    Gio.SubprocessFlags.NONE
-                );
+        const HBLOCK_ENABLE  = 'pkexec hblock';
+        const HBLOCK_DISABLE = 'pkexec hblock -S none -D none';
 
-                const success = await proc.wait_check_async(null);
-            } catch (e) {
-                logError(e);
-            }
-        }
-        else {
-            try {
-                const command = 'pkexec hblock -S none -D none'
-                const proc = Gio.Subprocess.new(
-                    ['/bin/sh', '-c', command],
-                    Gio.SubprocessFlags.NONE
-                );
-
-                const success = await proc.wait_check_async(null);
-            } catch (e) {
-                logError(e);
-            }
-        }
+        const command = this._toggle.checked ? HBLOCK_ENABLE : HBLOCK_DISABLE;
+        await this._runCommand(command);
 
         // Change the icon back to normal
         this._indicator.gicon = this._icon;
         this._toggle.gicon = this._icon;
+    }
+
+    async _runCommand(command) {
+        try {
+            const proc = Gio.Subprocess.new(
+                ['/bin/sh', '-c', command],
+                Gio.SubprocessFlags.NONE
+            );
+
+            const success = await proc.wait_check_async(null);
+        } catch (e) {
+            logError(e);
+        }
     }
 });
 
