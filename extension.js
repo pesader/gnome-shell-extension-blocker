@@ -64,16 +64,12 @@ class BlockerIndicator extends SystemIndicator {
         this._toggle = new BlockerToggle(settings);
         this._toggle.gicon = this._icon;
         this._toggle.connect ('notify::checked', () => this._onChecked ());
-        // this._onChecked();
-
-        // Sync the indicator and the toggle
         this._toggle.bind_property(
             'checked',
             this._indicator,
             'visible',
             GObject.BindingFlags.SYNC_CREATE
         );
-
         this.quickSettingsItems.push(this._toggle);
     }
 
