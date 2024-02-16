@@ -90,7 +90,6 @@ class HBlockIndicator extends SystemIndicator {
                 );
 
                 const success = await proc.wait_check_async(null);
-                Main.notify('hBlock', `hBlock ${success ? 'has been' : 'could not be'} enabled`);
             } catch (e) {
                 logError(e);
             }
@@ -104,7 +103,6 @@ class HBlockIndicator extends SystemIndicator {
                 );
 
                 const success = await proc.wait_check_async(null);
-                Main.notify('hBlock', `hBlock ${success ? 'has been' : 'could not be'} disabled`);
             } catch (e) {
                 logError(e);
             }
