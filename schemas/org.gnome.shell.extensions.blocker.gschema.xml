@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.blocker" path="/org/gnome/shell/extensions/blocker/">
+    <key name="blocker-enabled" type="b">
+      <default>false</default>
+    </key>
+  </schema>
+</schemalist>

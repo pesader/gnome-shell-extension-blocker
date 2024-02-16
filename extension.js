@@ -26,17 +26,26 @@ import {QuickToggle, SystemIndicator} from 'resource:///org/gnome/shell/ui/quick
 
 const HBlockToggle = GObject.registerClass(
 class HBlockToggle extends QuickToggle {
-    constructor() {
+    constructor(settings) {
         super({
             title: _('hBlock'),
             toggleMode: true,
         });
+
+        // Bind the toggle to a GSettings key
+        this._settings = settings;
+        this._settings.bind(
+            'hblock-enabled',
+            this,
+            'checked',
+            Gio.SettingsBindFlags.DEFAULT
+        );
     }
 });
 
 const HBlockIndicator = GObject.registerClass(
 class HBlockIndicator extends SystemIndicator {
-    constructor(path) {
+    constructor(settings, path) {
         super();
 
         // Icons
@@ -51,7 +60,7 @@ class HBlockIndicator extends SystemIndicator {
         this._indicator = this._addIndicator();
         this._indicator.gicon = this._icon;
 
-        this._toggle = new HBlockToggle();
+        this._toggle = new HBlockToggle(settings);
         this._toggle.gicon = this._icon;
         this._toggle.connect ('notify::checked', () => this._onChecked ());
         // this._onChecked();
@@ -114,7 +123,7 @@ export default class QuickSettingsExampleExtension extends Extension {
         if (GLib.find_program_in_path("hblock") === null) {
             Main.notify('hblock','Error: hBlock not installed');
         } else {
-            this._indicator = new HBlockIndicator(this.path);
+            this._indicator = new HBlockIndicator(this.getSettings(), this.path);
             Main.panel.statusArea.quickSettings.addExternalIndicator(this._indicator);
         }
     }
