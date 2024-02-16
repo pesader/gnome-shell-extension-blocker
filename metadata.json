@@ -1,9 +1,9 @@
 {
-  "name": "hBlock toggle",
+  "name": "Blocker",
   "description": "Easily toggle domain blocking",
-  "uuid": "hblock-toggle@pesader.dev",
+  "uuid": "blocker@pesader.dev",
   "shell-version": [
     "45"
   ],
-  "settings-schema": "org.gnome.shell.extensions.hblock-toggle"
+  "settings-schema": "org.gnome.shell.extensions.blocker"
 }

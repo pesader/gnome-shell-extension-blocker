@@ -24,18 +24,18 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {Extension, gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 import {QuickToggle, SystemIndicator} from 'resource:///org/gnome/shell/ui/quickSettings.js';
 
-const HBlockToggle = GObject.registerClass(
-class HBlockToggle extends QuickToggle {
+const BlockerToggle = GObject.registerClass(
+class BlockerToggle extends QuickToggle {
     constructor(settings) {
         super({
-            title: _('hBlock'),
+            title: 'Blocker',
             toggleMode: true,
         });
 
         // Bind the toggle to a GSettings key
         this._settings = settings;
         this._settings.bind(
-            'hblock-enabled',
+            'blocker-enabled',
             this,
             'checked',
             Gio.SettingsBindFlags.DEFAULT
@@ -43,24 +43,24 @@ class HBlockToggle extends QuickToggle {
     }
 });
 
-const HBlockIndicator = GObject.registerClass(
-class HBlockIndicator extends SystemIndicator {
+const BlockerIndicator = GObject.registerClass(
+class BlockerIndicator extends SystemIndicator {
     constructor(settings, path) {
         super();
 
         // Icons
         this._icon = Gio.icon_new_for_string(
-            `${path}/icons/hblock-symbolic.svg`
+            `${path}/icons/blocker-symbolic.svg`
         );
         this._iconAcquiring = Gio.icon_new_for_string(
-            `${path}/icons/hblock-acquiring-symbolic.svg`
+            `${path}/icons/blocker-acquiring-symbolic.svg`
         );
 
 
         this._indicator = this._addIndicator();
         this._indicator.gicon = this._icon;
 
-        this._toggle = new HBlockToggle(settings);
+        this._toggle = new BlockerToggle(settings);
         this._toggle.gicon = this._icon;
         this._toggle.connect ('notify::checked', () => this._onChecked ());
         // this._onChecked();
@@ -119,9 +119,9 @@ export default class QuickSettingsExampleExtension extends Extension {
 
         // Check if hBlock is installed
         if (GLib.find_program_in_path("hblock") === null) {
-            Main.notify('hblock','Error: hBlock not installed');
+            Main.notify('Blocker','Error: hBlock not installed');
         } else {
-            this._indicator = new HBlockIndicator(this.getSettings(), this.path);
+            this._indicator = new BlockerIndicator(this.getSettings(), this.path);
             Main.panel.statusArea.quickSettings.addExternalIndicator(this._indicator);
         }
     }
