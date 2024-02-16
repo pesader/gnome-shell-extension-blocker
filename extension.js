@@ -56,10 +56,11 @@ class BlockerIndicator extends SystemIndicator {
             `${path}/icons/blocker-acquiring-symbolic.svg`
         );
 
-
+        // Indicator
         this._indicator = this._addIndicator();
         this._indicator.gicon = this._icon;
 
+        // Toggle
         this._toggle = new BlockerToggle(settings);
         this._toggle.gicon = this._icon;
         this._toggle.connect ('notify::checked', () => this._onChecked ());
