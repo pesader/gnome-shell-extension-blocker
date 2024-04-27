@@ -3,7 +3,7 @@
   "description": "Easily toggle domain blocking",
   "uuid": "blocker@pesader.dev",
   "shell-version": [
-    "45"
+    "46"
   ],
   "settings-schema": "org.gnome.shell.extensions.blocker"
 }
