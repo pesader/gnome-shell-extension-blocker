@@ -6,11 +6,9 @@ A content blocker for your entire computer.
 
 ### Installation
 
-Blocker depends on hblock, which you can install by following the instructions laid out here [here](https://github.com/hectorm/hblock/blob/master/PACKAGES.md).
+Blocker depends on hblock, which you can install by following the instructions laid out here [here](https://github.com/hectorm/hblock/blob/master/PACKAGES.md). After installing hblock, you can install Blocker itself through the GNOME Extensions website.
 
-After installing hblock, you can install Blocker itself through the GNOME Extensions website.
-
-![Download from extensions.gnome.org](assets/ego.png)
+<img height="80" src="assets/ego.png">
 
 ### Usage
 
