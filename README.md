@@ -74,7 +74,7 @@ env MUTTER_DEBUG_DUMMY_MODE_SPECS=1024x768 dbus-run-session -- gnome-shell --nes
 
 ## Attribution
 
-Blocker's logo was derived from the [`shield-safe-symbolic`](https://gitlab.gnome.org/World/design/icon-library/-/blob/master/data/resources/icon-dev-kit/shield-safe-symbolic.svg?ref_type=heads) icon, by the GNOME Project. The code used to run shell commands asynchronously was heavily inspired by the [GJS documentation examples](https://gjs.guide/guides/gio/subprocesses.html) as well as by the [RunCommand plugin for GSConnect](https://github.com/GSConnect/gnome-shell-extension-gsconnect/blob/main/src/service/plugins/runcommand.js). Finally, the code used to assign a custom icon to the Quick Settings toggle was based on the codebase from [Caffeine](https://github.com/eonpatapon/gnome-shell-extension-caffeine).
+Blocker's logo was derived from the [`shield-safe-symbolic`](https://gitlab.gnome.org/World/design/icon-library/-/blob/master/data/resources/icon-dev-kit/shield-safe-symbolic.svg?ref_type=heads) icon, by the GNOME Project. The EGO banner was modified from [Just Perfection's work](https://gitlab.gnome.org/jrahmatzadeh/just-perfection/-/blob/main/data/imgs/ego.svg?ref_type=heads). The code used to run shell commands asynchronously was heavily inspired by the [GJS documentation examples](https://gjs.guide/guides/gio/subprocesses.html) as well as by the [RunCommand plugin for GSConnect](https://github.com/GSConnect/gnome-shell-extension-gsconnect/blob/main/src/service/plugins/runcommand.js). Finally, the code used to assign a custom icon to the Quick Settings toggle was based on the codebase from [Caffeine](https://github.com/eonpatapon/gnome-shell-extension-caffeine).
 
 ## Gratitude
 
