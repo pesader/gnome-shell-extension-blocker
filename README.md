@@ -13,7 +13,7 @@ Blocker depends on hblock, which you can install by following the instructions l
 
 After installing hblock, you can install Blocker itself through the GNOME Extensions website.
 
-![Download from extensions.gnome.org](assets/ego.svg)
+![Download from extensions.gnome.org](assets/ego.png)
 
 ### Usage
 
