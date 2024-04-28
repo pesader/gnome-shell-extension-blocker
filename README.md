@@ -8,9 +8,6 @@ A content blocker for your entire computer.
 
 Blocker depends on hblock, which you can install by following the instructions laid out here [here](https://github.com/hectorm/hblock/blob/master/PACKAGES.md).
 
-> [!NOTE]
-> I'm also the maintainer of the COPR repository that packages hblock for Fedora
-
 After installing hblock, you can install Blocker itself through the GNOME Extensions website.
 
 ![Download from extensions.gnome.org](assets/ego.png)
