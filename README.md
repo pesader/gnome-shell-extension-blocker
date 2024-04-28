@@ -21,8 +21,8 @@ Click the Quick Settings toggle and input your user's password to activate Block
 
 ## FAQ
 
-<details>
-<summary><b>How does it work?</b></summary>
+### How does it work?
+
 This GNOME Shell extension is just a convenient frontend for [hblock](https://github.com/hectorm/hblock/), which does all the heavy lifting. Here's what happens when you toggle Blocker:
 
 First, Blocker uses pkexec (the program that prompts you for your password) to gain super user privilege, which is required to run hblock. Then, if you enabled Blocker, it enables hblock by running `hblock`. If you disabled Blocker, it disables hblock by running `hblock -S none -D none`. I couldn't resist a flowchart...
@@ -34,29 +34,24 @@ A["Blocker toggled"] --> B["Gain privilege with pkexec"]
 B -- Blocker disabled --> C["Execute  `hblock -S none -D none`"]
 B -- Blocker enabled --> D["Execute  `hblock`"]
 ```
-</details>
 
-<details>
-<summary><b>What are its limitations?</b></summary>
+### What are its limitations?
+
 Blocker is powered by hblock, so its limitations are Blocker's limitations.
 
 The content blocking strategy used by hblock is [DNS blocking](https://en.wikipedia.org/wiki/DNS_blocking). That means that any connections that do not depend on name resolution cannot be blocked using this approach, such as accessing an IP address directly. Additionally, certain applications may set their own DNS settings (e.g. Firefox, when it uses DNS over HTTPS) instead of adhering to the system's configuration. Finally, your DNS settings may be affected if you are using a VPN, which tipically route your DNS queries to its own resolvers.
-</details>
 
-<details>
-<summary><b>How do I know it's working?</b></summary>
+### How do I know it's working?
+
 Visit https://hblock.molinero.dev, it tells you whether hblock is active or not. This is does that by checking if connections to https://hblock-check.molinero.dev are blocked, which is the case for hblock's default configuration.
-</details>
 
-<details>
-<summary><b>Can I customize the denylist?</b></summary>
+### Can I customize the denylist?
+
 Blocker does not provide, not plans to provide, that kind of customization. However, you can do that if you hblock directly in the terminal, using `-A`, `-D`, and `-S` flags. Run `hblock --help` for more details.
-</details>
 
-<details>
-<summary><b>Where should I report problems?</b></summary>
+### Where should I report problems?
+
 For false positives, report in [hblock's issue tracker](https://github.com/hectorm/hblock/issues). For everything else, report in [Blocker's issue tracker](https://github.com/pesader/gnome-shell-extension-blocker/issues).
-</details>
 
 ## Contributing
 
