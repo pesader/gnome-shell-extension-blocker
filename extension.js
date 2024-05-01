@@ -50,8 +50,8 @@ const BlockerIndicator = GObject.registerClass(
             super();
 
             // Icons
-            this._icon = Gio.icon_new_for_string(
-                `${path}/icons/blocker-symbolic.svg`
+            this._iconEnabled = Gio.icon_new_for_string(
+                `${path}/icons/blocker-enabled-symbolic.svg`
             );
             this._iconAcquiring = Gio.icon_new_for_string(
                 `${path}/icons/blocker-acquiring-symbolic.svg`
@@ -59,11 +59,11 @@ const BlockerIndicator = GObject.registerClass(
 
             // Indicator
             this._indicator = this._addIndicator();
-            this._indicator.gicon = this._icon;
+            this._indicator.gicon = this._iconEnabled;
 
             // Toggle
             this._toggle = new BlockerToggle(settings);
-            this._toggle.gicon = this._icon;
+            this._toggle.gicon = this._iconEnabled;
             this._toggle.connect('notify::checked', () => this._onChecked());
             this._toggle.bind_property(
                 'checked',
@@ -77,14 +77,14 @@ const BlockerIndicator = GObject.registerClass(
         showNotification(title, body) {
             const source = new MessageTray.Source({
                 title: 'Blocker',
-                icon: this._icon,
+                icon: this._iconEnabled,
             });
 
             const notification = new MessageTray.Notification({
                 source: source,
                 title: title,
                 body: body,
-                gicon: this._icon,
+                gicon: this._iconEnabled,
             });
 
             Main.messageTray.add(source);
@@ -101,8 +101,8 @@ const BlockerIndicator = GObject.registerClass(
             await this._hblockToggle()
 
             // Change the icon back to normal
-            this._indicator.gicon = this._icon;
-            this._toggle.gicon = this._icon;
+            this._indicator.gicon = this._iconEnabled;
+            this._toggle.gicon = this._iconEnabled;
             this._toggle.set_reactive(true)
 
             // Notify the user
