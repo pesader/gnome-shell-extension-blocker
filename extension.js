@@ -20,6 +20,7 @@ import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import * as MessageTray from 'resource:///org/gnome/shell/ui/messageTray.js';
 
 import {Extension, gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 import {QuickToggle, SystemIndicator} from 'resource:///org/gnome/shell/ui/quickSettings.js';
@@ -73,6 +74,23 @@ const BlockerIndicator = GObject.registerClass(
             this.quickSettingsItems.push(this._toggle);
         }
 
+        showNotification(title, body) {
+            const source = new MessageTray.Source({
+                title: 'Blocker',
+                icon: this._icon,
+            });
+
+            const notification = new MessageTray.Notification({
+                source: source,
+                title: title,
+                body: body,
+                gicon: this._icon,
+            });
+
+            Main.messageTray.add(source);
+            source.addNotification(notification);
+        }
+
         async _onChecked() {
             // While commands are running, change the icons
             this._indicator.gicon = this._iconAcquiring;
@@ -86,6 +104,13 @@ const BlockerIndicator = GObject.registerClass(
             this._indicator.gicon = this._icon;
             this._toggle.gicon = this._icon;
             this._toggle.set_reactive(true)
+
+            // Notify the user
+            if (this._toggle.checked) {
+                this.showNotification("Shields up", "Content blocking has been enabled")
+            } else {
+                this.showNotification("Shields down", "Content blocking has been disabled")
+            }
         }
 
         async _hblockToggle() {
@@ -106,6 +131,7 @@ const BlockerIndicator = GObject.registerClass(
                 );
                 await proc.wait_check_async(null);
             } catch (e) {
+                this.showNotification(`Failed to run "${command}"`, e.message)
                 logError(e);
             }
         }
