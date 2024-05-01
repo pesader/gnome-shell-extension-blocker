@@ -53,17 +53,18 @@ const BlockerIndicator = GObject.registerClass(
             this._iconEnabled = Gio.icon_new_for_string(
                 `${path}/icons/blocker-enabled-symbolic.svg`
             );
+            this._iconDisabled = Gio.icon_new_for_string(
+                `${path}/icons/blocker-disabled-symbolic.svg`
+            );
             this._iconAcquiring = Gio.icon_new_for_string(
                 `${path}/icons/blocker-acquiring-symbolic.svg`
             );
 
             // Indicator
             this._indicator = this._addIndicator();
-            this._indicator.gicon = this._iconEnabled;
 
             // Toggle
             this._toggle = new BlockerToggle(settings);
-            this._toggle.gicon = this._iconEnabled;
             this._toggle.connect('notify::checked', () => this._onChecked());
             this._toggle.bind_property(
                 'checked',
@@ -71,10 +72,18 @@ const BlockerIndicator = GObject.registerClass(
                 'visible',
                 GObject.BindingFlags.SYNC_CREATE
             );
+
+            if (this._toggle.checked) {
+                this._indicator.gicon = this._iconEnabled;
+                this._toggle.gicon = this._iconEnabled;
+            } else {
+                this._indicator.gicon = this._iconDisabled;
+                this._toggle.gicon = this._iconDisabled;
+            }
             this.quickSettingsItems.push(this._toggle);
         }
 
-        showNotification(title, body) {
+        showNotification(title, body, gicon) {
             const source = new MessageTray.Source({
                 title: 'Blocker',
                 icon: this._iconEnabled,
@@ -84,7 +93,7 @@ const BlockerIndicator = GObject.registerClass(
                 source: source,
                 title: title,
                 body: body,
-                gicon: this._iconEnabled,
+                gicon: gicon,
             });
 
             Main.messageTray.add(source);
@@ -101,15 +110,17 @@ const BlockerIndicator = GObject.registerClass(
             await this._hblockToggle()
 
             // Change the icon back to normal
-            this._indicator.gicon = this._iconEnabled;
-            this._toggle.gicon = this._iconEnabled;
             this._toggle.set_reactive(true)
 
             // Notify the user
             if (this._toggle.checked) {
-                this.showNotification("Shields up", "Content blocking has been enabled")
+                this.showNotification("Shields up", "Content blocking has been enabled", this._iconEnabled)
+                this._indicator.gicon = this._iconEnabled;
+                this._toggle.gicon = this._iconEnabled;
             } else {
-                this.showNotification("Shields down", "Content blocking has been disabled")
+                this.showNotification("Shields down", "Content blocking has been disabled", this._iconDisabled)
+                this._indicator.gicon = this._iconDisabled;
+                this._toggle.gicon = this._iconDisabled;
             }
         }
 
@@ -131,7 +142,7 @@ const BlockerIndicator = GObject.registerClass(
                 );
                 await proc.wait_check_async(null);
             } catch (e) {
-                this.showNotification(`Failed to run "${command}"`, e.message)
+                this.showNotification(`Failed to run "${command}"`, e.message, this._iconDisabled)
                 logError(e);
             }
         }
