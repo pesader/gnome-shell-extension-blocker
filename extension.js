@@ -110,6 +110,48 @@ class BlockerNotifier {
     }
 }
 
+class BlockerRunner {
+    constructor(notifier) {
+        this._notifier = notifier
+    }
+
+    async hblockEnable() {
+        const HBLOCK_ENABLE = 'pkexec hblock';
+
+        const command = HBLOCK_ENABLE;
+        const success = await this._runCommand(command);
+        return success;
+    }
+
+    async hblockDisable() {
+        const HBLOCK_DISABLE = 'pkexec hblock -S none -D none';
+
+        const command = HBLOCK_DISABLE;
+        const success = await this._runCommand(command);
+        return success;
+    }
+
+    async _runCommand(command) {
+        let success = false;
+        try {
+            const proc = Gio.Subprocess.new(
+                ['/bin/sh', '-c', command],
+                Gio.SubprocessFlags.NONE
+            );
+
+            success = await proc.wait_check_async(null);
+
+            if (!success)
+                this._notifier.notifyException(`Failed to run "${command}"`, "Process existed with non-zero code")
+
+        } catch (e) {
+            this._notifier.notifyException(`Could not run "${command}"`, e.message)
+            logError(e);
+        }
+        return success
+    }
+}
+
 const BlockerToggle = GObject.registerClass(
     class BlockerToggle extends QuickToggle {
         constructor(settings) {
@@ -131,7 +173,7 @@ const BlockerToggle = GObject.registerClass(
 
 const BlockerIndicator = GObject.registerClass(
     class BlockerIndicator extends SystemIndicator {
-        constructor(settings, icons, notifier) {
+        constructor(settings, icons, notifier, runner) {
             super();
 
             // Icons
@@ -140,6 +182,8 @@ const BlockerIndicator = GObject.registerClass(
             // Notifier
             this._notifier = notifier
 
+            // Runner
+            this._runner = runner
 
             // Indicator
             this._indicator = this._addIndicator();
@@ -192,35 +236,12 @@ const BlockerIndicator = GObject.registerClass(
         }
 
         async _hblockToggle() {
-            // Run command to toggle hblock
-            const HBLOCK_ENABLE = 'pkexec hblock';
-            const HBLOCK_DISABLE = 'pkexec hblock -S none -D none';
-            const command = this._toggle.checked ? HBLOCK_DISABLE : HBLOCK_ENABLE;
-
-            // Wait until command is done
-            const success = await this._runCommand(command);
-
+            let success;
+            if (this._toggle.checked)
+                success = await this._runner.hblockDisable()
+            else
+                success = await this._runner.hblockEnable()
             return success;
-        }
-
-        async _runCommand(command) {
-            let success = false;
-            try {
-                const proc = Gio.Subprocess.new(
-                    ['/bin/sh', '-c', command],
-                    Gio.SubprocessFlags.NONE
-                );
-
-                success = await proc.wait_check_async(null);
-
-                if (!success)
-                    this._notifier.notifyException(`Failed to run "${command}"`, "Process existed with non-zero code")
-
-            } catch (e) {
-                this._notifier.notifyException(`Could not run "${command}"`, e.message)
-                logError(e);
-            }
-            return success
         }
 
         destroy() {
@@ -233,12 +254,13 @@ export default class QuickSettingsExampleExtension extends Extension {
     enable() {
         this._icons = new BlockerIcons(this.path)
         this._notifier = new BlockerNotifier(this._icons)
+        this._runner = new BlockerRunner(this._notifier)
 
         // Check if hBlock is installed
         if (GLib.find_program_in_path("hblock") === null) {
             Main.notifyError('Blocker', 'Error: hBlock not installed');
         } else {
-            this._indicator = new BlockerIndicator(this.getSettings(), this._icons, this._notifier);
+            this._indicator = new BlockerIndicator(this.getSettings(), this._icons, this._notifier, this._runner);
             Main.panel.statusArea.quickSettings.addExternalIndicator(this._indicator);
         }
     }
