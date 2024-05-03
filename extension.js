@@ -303,10 +303,29 @@ export default class QuickSettingsExampleExtension extends Extension {
         }
     }
 
-    disable() {
+    destroy() {
         if (this._indicator) {
-            this._indicator.quickSettingsItems.forEach(item => item.destroy());
             this._indicator.destroy();
+            this._indicator = null;
         }
+
+        if (this._runner) {
+            this._runner.destroy();
+            this._runner = null;
+        }
+
+        if (this._notifier) {
+            this._notifier.destroy();
+            this._notifier = null;
+        }
+
+        if (this._icons) {
+            this._icons.destroy();
+            this._icons = null;
+        }
+    }
+
+    disable() {
+        this.destroy();
     }
 }
