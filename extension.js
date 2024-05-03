@@ -131,14 +131,14 @@ const BlockerToggle = GObject.registerClass(
 
 const BlockerIndicator = GObject.registerClass(
     class BlockerIndicator extends SystemIndicator {
-        constructor(settings, path) {
+        constructor(settings, icons, notifier) {
             super();
 
             // Icons
-            this._icons = new BlockerIcons(path)
+            this._icons = icons
 
             // Notifier
-            this._notifier = new BlockerNotifier(this._icons)
+            this._notifier = notifier
 
 
             // Indicator
@@ -231,11 +231,14 @@ const BlockerIndicator = GObject.registerClass(
 
 export default class QuickSettingsExampleExtension extends Extension {
     enable() {
+        this._icons = new BlockerIcons(this.path)
+        this._notifier = new BlockerNotifier(this._icons)
+
         // Check if hBlock is installed
         if (GLib.find_program_in_path("hblock") === null) {
             Main.notifyError('Blocker', 'Error: hBlock not installed');
         } else {
-            this._indicator = new BlockerIndicator(this.getSettings(), this.path);
+            this._indicator = new BlockerIndicator(this.getSettings(), this._icons, this._notifier);
             Main.panel.statusArea.quickSettings.addExternalIndicator(this._indicator);
         }
     }
