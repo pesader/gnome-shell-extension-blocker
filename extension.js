@@ -25,6 +25,35 @@ import * as MessageTray from 'resource:///org/gnome/shell/ui/messageTray.js';
 import {Extension, gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 import {QuickToggle, SystemIndicator} from 'resource:///org/gnome/shell/ui/quickSettings.js';
 
+class BlockerIcons {
+    constructor(path) {
+        this.enabled = Gio.icon_new_for_string(
+            `${path}/icons/blocker-enabled-symbolic.svg`
+        );
+        this.disabled = Gio.icon_new_for_string(
+            `${path}/icons/blocker-disabled-symbolic.svg`
+        );
+        this.acquiring = Gio.icon_new_for_string(
+            `${path}/icons/blocker-acquiring-symbolic.svg`
+        );
+    }
+
+    get brand() {
+        return this.enabled
+    }
+
+    get error() {
+        return this.disabled
+    }
+
+    select(enabled) {
+        if (enabled)
+            return this.enabled;
+        else
+            return this.disabled;
+    }
+}
+
 const BlockerToggle = GObject.registerClass(
     class BlockerToggle extends QuickToggle {
         constructor(settings) {
@@ -49,16 +78,7 @@ const BlockerIndicator = GObject.registerClass(
         constructor(settings, path) {
             super();
 
-            // Icons
-            this._iconEnabled = Gio.icon_new_for_string(
-                `${path}/icons/blocker-enabled-symbolic.svg`
-            );
-            this._iconDisabled = Gio.icon_new_for_string(
-                `${path}/icons/blocker-disabled-symbolic.svg`
-            );
-            this._iconAcquiring = Gio.icon_new_for_string(
-                `${path}/icons/blocker-acquiring-symbolic.svg`
-            );
+            this._icons = new BlockerIcons(path)
 
             // Indicator
             this._indicator = this._addIndicator();
@@ -74,20 +94,17 @@ const BlockerIndicator = GObject.registerClass(
                 GObject.BindingFlags.SYNC_CREATE
             );
 
-            if (this._toggle.checked) {
-                this._indicator.gicon = this._iconEnabled;
-                this._toggle.gicon = this._iconEnabled;
-            } else {
-                this._indicator.gicon = this._iconDisabled;
-                this._toggle.gicon = this._iconDisabled;
-            }
+            const icon = this._icons.select(this._toggle.checked)
+            this._indicator.gicon = icon
+            this._toggle.gicon = icon
+
             this.quickSettingsItems.push(this._toggle);
         }
 
         showNotification(title, body, gicon) {
             const source = new MessageTray.Source({
                 title: 'Blocker',
-                icon: this._iconEnabled,
+                icon: this._icons.brand,
             });
 
             const notification = new MessageTray.Notification({
@@ -102,16 +119,13 @@ const BlockerIndicator = GObject.registerClass(
         }
 
         _onChecked() {
-            if (this._toggle.checked) {
-                this.showNotification("Shields up", "Content blocking has been enabled", this._iconEnabled)
-                this._indicator.gicon = this._iconEnabled;
-                this._toggle.gicon = this._iconEnabled;
-            } else {
-                this.showNotification("Shields down", "Content blocking has been disabled", this._iconDisabled)
-                this._indicator.gicon = this._iconDisabled;
-                this._toggle.gicon = this._iconDisabled;
-            }
-            this._toggle.set_reactive(true)
+            const icon = this._icons.select(this._toggle.checked)
+            const direction = this._toggle.checked ? "up" : "down"
+            const action = this._toggle.checked ? "enabled" : "disabled"
+            this.showNotification(`Shields ${direction}`, `Content blocking has been ${action}`, icon)
+
+            this._indicator.gicon = icon
+            this._toggle.gicon = icon
         }
 
         async _onClicked() {
@@ -119,8 +133,8 @@ const BlockerIndicator = GObject.registerClass(
             const restoreIcon = this._toggle.gicon
 
             // While commands are running, change the icons
-            this._indicator.gicon = this._iconAcquiring;
-            this._toggle.gicon = this._iconAcquiring;
+            this._indicator.gicon = this._icons.acquiring;
+            this._toggle.gicon = this._icons.acquiring;
             this._toggle.set_reactive(false)
 
             // Toggle hblock
@@ -131,8 +145,8 @@ const BlockerIndicator = GObject.registerClass(
             } else {
                 this._indicator.gicon = restoreIcon;
                 this._toggle.gicon = restoreIcon;
-                this._toggle.set_reactive(true)
             }
+            this._toggle.set_reactive(true)
         }
 
         async _hblockToggle() {
@@ -158,10 +172,10 @@ const BlockerIndicator = GObject.registerClass(
                 success = await proc.wait_check_async(null);
 
                 if (!success)
-                    this.showNotification(`Failed to run "${command}"`, e.message, this._iconDisabled)
+                    this.showNotification(`Failed to run "${command}"`, e.message, this._icons.error)
 
             } catch (e) {
-                this.showNotification(`Could not run "${command}"`, e.message, this._iconDisabled)
+                this.showNotification(`Could not run "${command}"`, e.message, this._icons.error)
                 logError(e);
             }
             return success
