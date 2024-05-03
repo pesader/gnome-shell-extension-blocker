@@ -80,6 +80,14 @@ const BlockerIndicator = GObject.registerClass(
             // Icons
             this._icons = new BlockerIcons(path)
 
+            // Notification source
+            this._notificationSource = new MessageTray.Source({
+                title: 'Blocker',
+                icon: this._icons.brand,
+            });
+            this._notificationSource.connect('destroy', () => {this._notificationSource = null;});
+            Main.messageTray.add(this._notificationSource);
+
             // Indicator
             this._indicator = this._addIndicator();
 
@@ -102,20 +110,14 @@ const BlockerIndicator = GObject.registerClass(
         }
 
         showNotification(title, body, gicon) {
-            const source = new MessageTray.Source({
-                title: 'Blocker',
-                icon: this._icons.brand,
-            });
-
             const notification = new MessageTray.Notification({
-                source: source,
+                source: this._notificationSource,
                 title: title,
                 body: body,
                 gicon: gicon,
             });
 
-            Main.messageTray.add(source);
-            source.addNotification(notification);
+            this._notificationSource.addNotification(notification);
         }
 
         _onChecked() {
