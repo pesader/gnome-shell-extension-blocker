@@ -270,6 +270,10 @@ const BlockerIndicator = GObject.registerClass(
         }
 
         destroy() {
+            if (this._indicator) {
+                this._indicator.quickSettingsItems.forEach(item => item.destroy());
+                this._indicator.destroy();
+            }
             if (this._runner) {
                 this._runner.destroy()
                 this._runner = null
@@ -281,11 +285,6 @@ const BlockerIndicator = GObject.registerClass(
             if (this._icons) {
                 this._icons.destroy()
                 this._icons = null
-            }
-
-            if (this._indicator) {
-                this._indicator.quickSettingsItems.forEach(item => item.destroy());
-                this._indicator.destroy();
             }
         }
     });
