@@ -51,6 +51,13 @@ class BlockerIcons {
         else
             return this.disabled;
     }
+
+    destroy() {
+        this.enabled = null
+        this.disabled = null
+        this.acquiring = null
+        this.failure = null
+    }
 }
 
 const BlockerToggle = GObject.registerClass(
@@ -181,6 +188,11 @@ const BlockerIndicator = GObject.registerClass(
                 logError(e);
             }
             return success
+        }
+
+        destroy() {
+            this._icons.destroy()
+            super.destroy()
         }
     });
 
