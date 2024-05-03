@@ -56,8 +56,8 @@ const BlockerIndicator = GObject.registerClass(
             this._iconDisabled = Gio.icon_new_for_string(
                 `${path}/icons/blocker-disabled-symbolic.svg`
             );
-            this._iconAcquiring = Gio.icon_new_for_string(
-                `${path}/icons/blocker-acquiring-symbolic.svg`
+            this._iconWaiting = Gio.icon_new_for_string(
+                `${path}/icons/blocker-waiting-symbolic.svg`
             );
 
             // Indicator
@@ -119,8 +119,8 @@ const BlockerIndicator = GObject.registerClass(
             const restoreIcon = this._toggle.gicon
 
             // While commands are running, change the icons
-            this._indicator.gicon = this._iconAcquiring;
-            this._toggle.gicon = this._iconAcquiring;
+            this._indicator.gicon = this._iconWaiting;
+            this._toggle.gicon = this._iconWaiting;
             this._toggle.set_reactive(false)
 
             // Toggle hblock
