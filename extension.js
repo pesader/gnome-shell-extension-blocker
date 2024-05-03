@@ -150,6 +150,13 @@ class BlockerRunner {
         }
         return success
     }
+
+    destroy() {
+        if (this._notifier) {
+            this._notifier.destroy()
+            this._notifier = null
+        }
+    }
 }
 
 const BlockerToggle = GObject.registerClass(
