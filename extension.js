@@ -42,7 +42,7 @@ class BlockerIcons {
         return this.enabled
     }
 
-    get error() {
+    get failure() {
         return this.disabled
     }
 
@@ -172,10 +172,10 @@ const BlockerIndicator = GObject.registerClass(
                 success = await proc.wait_check_async(null);
 
                 if (!success)
-                    this.showNotification(`Failed to run "${command}"`, e.message, this._icons.error)
+                    this.showNotification(`Failed to run "${command}"`, e.message, this._icons.failure)
 
             } catch (e) {
-                this.showNotification(`Could not run "${command}"`, e.message, this._icons.error)
+                this.showNotification(`Could not run "${command}"`, e.message, this._icons.failure)
                 logError(e);
             }
             return success
