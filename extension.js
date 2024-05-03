@@ -53,10 +53,60 @@ class BlockerIcons {
     }
 
     destroy() {
-        this.enabled = null
-        this.disabled = null
-        this.acquiring = null
-        this.failure = null
+        if (this.enabled)
+            this.enabled = null
+
+        if (this.disabled)
+            this.disabled = null
+
+        if (this.acquiring)
+            this.acquiring = null
+
+        if (this.failure)
+            this.failure = null
+    }
+}
+
+class BlockerNotifier {
+    constructor(icons) {
+        this._icons = icons
+        this._notificationSource = new MessageTray.Source({
+            title: 'Blocker',
+            icon: this._icons.brand,
+        });
+        Main.messageTray.add(this._notificationSource);
+    }
+
+    _notify(title, body, gicon) {
+        const notification = new MessageTray.Notification({
+            source: this._notificationSource,
+            title: title,
+            body: body,
+            gicon: gicon,
+        });
+        this._notificationSource.addNotification(notification);
+    }
+
+    notifyStatus(status) {
+        const icon = this._icons.select(status)
+        const direction = status ? "up" : "down"
+        const action = status ? "enabled" : "disabled"
+        this._notify(`Shields ${direction}`, `Content blocking has been ${action}`, icon)
+    }
+
+    notifyException(title, message) {
+        this._notify(title, message, this._icons.failure)
+    }
+
+    destroy() {
+        if (this._icons) {
+            this._icons.destroy()
+            this._icons = null
+        }
+        if (this._notificationSource) {
+            this._notificationSource.destroy()
+            this._notificationSource = null
+        }
     }
 }
 
@@ -87,13 +137,9 @@ const BlockerIndicator = GObject.registerClass(
             // Icons
             this._icons = new BlockerIcons(path)
 
-            // Notification source
-            this._notificationSource = new MessageTray.Source({
-                title: 'Blocker',
-                icon: this._icons.brand,
-            });
-            this._notificationSource.connect('destroy', () => {this._notificationSource = null;});
-            Main.messageTray.add(this._notificationSource);
+            // Notifier
+            this._notifier = new BlockerNotifier(this._icons)
+
 
             // Indicator
             this._indicator = this._addIndicator();
@@ -116,23 +162,10 @@ const BlockerIndicator = GObject.registerClass(
             this.quickSettingsItems.push(this._toggle);
         }
 
-        showNotification(title, body, gicon) {
-            const notification = new MessageTray.Notification({
-                source: this._notificationSource,
-                title: title,
-                body: body,
-                gicon: gicon,
-            });
-
-            this._notificationSource.addNotification(notification);
-        }
-
         _onChecked() {
-            const icon = this._icons.select(this._toggle.checked)
-            const direction = this._toggle.checked ? "up" : "down"
-            const action = this._toggle.checked ? "enabled" : "disabled"
-            this.showNotification(`Shields ${direction}`, `Content blocking has been ${action}`, icon)
+            this._notifier.notifyStatus(this._toggle.checked)
 
+            const icon = this._icons.select(this._toggle.checked)
             this._indicator.gicon = icon
             this._toggle.gicon = icon
         }
@@ -181,10 +214,10 @@ const BlockerIndicator = GObject.registerClass(
                 success = await proc.wait_check_async(null);
 
                 if (!success)
-                    this.showNotification(`Failed to run "${command}"`, e.message, this._icons.failure)
+                    this._notifier.notifyException(`Failed to run "${command}"`, "Process existed with non-zero code")
 
             } catch (e) {
-                this.showNotification(`Could not run "${command}"`, e.message, this._icons.failure)
+                this._notifier.notifyException(`Could not run "${command}"`, e.message)
                 logError(e);
             }
             return success
