@@ -36,14 +36,13 @@ class BlockerIcons {
         this.acquiring = Gio.icon_new_for_string(
             `${path}/icons/blocker-acquiring-symbolic.svg`
         );
+        this.failure = Gio.icon_new_for_string(
+            `${path}/icons/blocker-failure-symbolic.svg`
+        );
     }
 
     get brand() {
         return this.enabled
-    }
-
-    get failure() {
-        return this.disabled
     }
 
     select(enabled) {
