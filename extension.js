@@ -95,7 +95,7 @@ class BlockerNotifier {
     }
 
     notifyException(title, message) {
-        this._notify(title, message, this._icons.failure)
+        this._notify(`Error: ${title}`, message, this._icons.failure)
     }
 
     destroy() {
