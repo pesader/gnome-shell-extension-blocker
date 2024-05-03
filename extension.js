@@ -30,7 +30,7 @@ const BlockerToggle = GObject.registerClass(
         constructor(settings) {
             super({
                 title: 'Blocker',
-                toggleMode: true,
+                toggleMode: false,
             });
 
             // Bind the toggle to a GSettings key
@@ -65,6 +65,7 @@ const BlockerIndicator = GObject.registerClass(
 
             // Toggle
             this._toggle = new BlockerToggle(settings);
+            this._toggle.connect('clicked', () => this._onClicked());
             this._toggle.connect('notify::checked', () => this._onChecked());
             this._toggle.bind_property(
                 'checked',
@@ -100,19 +101,7 @@ const BlockerIndicator = GObject.registerClass(
             source.addNotification(notification);
         }
 
-        async _onChecked() {
-            // While commands are running, change the icons
-            this._indicator.gicon = this._iconAcquiring;
-            this._toggle.gicon = this._iconAcquiring;
-            this._toggle.set_reactive(false)
-
-            // Toggle hblock
-            await this._hblockToggle()
-
-            // Change the icon back to normal
-            this._toggle.set_reactive(true)
-
-            // Notify the user
+        _onChecked() {
             if (this._toggle.checked) {
                 this.showNotification("Shields up", "Content blocking has been enabled", this._iconEnabled)
                 this._indicator.gicon = this._iconEnabled;
@@ -122,29 +111,60 @@ const BlockerIndicator = GObject.registerClass(
                 this._indicator.gicon = this._iconDisabled;
                 this._toggle.gicon = this._iconDisabled;
             }
+            this._toggle.set_reactive(true)
+        }
+
+        async _onClicked() {
+            // Save current icon to restore in case of failure
+            const restoreIcon = this._toggle.gicon
+
+            // While commands are running, change the icons
+            this._indicator.gicon = this._iconAcquiring;
+            this._toggle.gicon = this._iconAcquiring;
+            this._toggle.set_reactive(false)
+
+            // Toggle hblock
+            const success = await this._hblockToggle()
+
+            if (success) {
+                this._toggle.checked = !this._toggle.checked
+            } else {
+                this._indicator.gicon = restoreIcon;
+                this._toggle.gicon = restoreIcon;
+                this._toggle.set_reactive(true)
+            }
         }
 
         async _hblockToggle() {
             // Run command to toggle hblock
             const HBLOCK_ENABLE = 'pkexec hblock';
             const HBLOCK_DISABLE = 'pkexec hblock -S none -D none';
-            const command = this._toggle.checked ? HBLOCK_ENABLE : HBLOCK_DISABLE;
+            const command = this._toggle.checked ? HBLOCK_DISABLE : HBLOCK_ENABLE;
 
             // Wait until command is done
-            await this._runCommand(command);
+            const success = await this._runCommand(command);
+
+            return success;
         }
 
         async _runCommand(command) {
+            let success = false;
             try {
                 const proc = Gio.Subprocess.new(
                     ['/bin/sh', '-c', command],
                     Gio.SubprocessFlags.NONE
                 );
-                await proc.wait_check_async(null);
+
+                success = await proc.wait_check_async(null);
+
+                if (!success)
+                    this.showNotification(`Failed to run "${command}"`, e.message, this._iconDisabled)
+
             } catch (e) {
-                this.showNotification(`Failed to run "${command}"`, e.message, this._iconDisabled)
+                this.showNotification(`Could not run "${command}"`, e.message, this._iconDisabled)
                 logError(e);
             }
+            return success
         }
     });
 
