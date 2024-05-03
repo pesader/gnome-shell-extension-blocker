@@ -77,6 +77,7 @@ const BlockerIndicator = GObject.registerClass(
         constructor(settings, path) {
             super();
 
+            // Icons
             this._icons = new BlockerIcons(path)
 
             // Indicator
