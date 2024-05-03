@@ -115,19 +115,37 @@ class BlockerRunner {
         this._notifier = notifier
     }
 
+    hblockAvailable() {
+        let available;
+
+        if (GLib.find_program_in_path("hblock") === null) {
+            this._notifier.notifyException("Missing dependency", `Executable "hblock" was not found in $PATH`)
+            available = false;
+        } else
+            available = true;
+
+        return available;
+    }
+
     async hblockEnable() {
         const HBLOCK_ENABLE = 'pkexec hblock';
 
-        const command = HBLOCK_ENABLE;
-        const success = await this._runCommand(command);
+        let success = false;
+        if (this.hblockAvailable()) {
+            const command = HBLOCK_ENABLE;
+            success = await this._runCommand(command);
+        }
         return success;
     }
 
     async hblockDisable() {
         const HBLOCK_DISABLE = 'pkexec hblock -S none -D none';
 
-        const command = HBLOCK_DISABLE;
-        const success = await this._runCommand(command);
+        let success = false;
+        if (this.hblockAvailable()) {
+            const command = HBLOCK_DISABLE;
+            success = await this._runCommand(command);
+        }
         return success;
     }
 
@@ -275,9 +293,7 @@ export default class QuickSettingsExampleExtension extends Extension {
         this._runner = new BlockerRunner(this._notifier)
 
         // Check if hBlock is installed
-        if (GLib.find_program_in_path("hblock") === null) {
-            Main.notifyError('Blocker', 'Error: hBlock not installed');
-        } else {
+        if (this._runner.hblockAvailable()) {
             this._indicator = new BlockerIndicator(this.getSettings(), this._icons, this._notifier, this._runner);
             Main.panel.statusArea.quickSettings.addExternalIndicator(this._indicator);
         }
