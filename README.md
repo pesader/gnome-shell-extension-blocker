@@ -83,6 +83,10 @@ env MUTTER_DEBUG_DUMMY_MODE_SPECS=1024x768 dbus-run-session -- gnome-shell --nes
 - Run shell commands asynchronously: heavily inspired by the [GJS docs](https://gjs.guide/guides/gio/subprocesses.html) and [GSConnect](https://github.com/GSConnect/gnome-shell-extension-gsconnect/blob/main/src/service/plugins/runcommand.js).
 - Send customized notifications: reused from [Gravatar](https://github.com/dsheeler/gnome-shell-extensions-gravatar) and [Picture of the day](https://github.com/swsnr/gnome-shell-extension-picture-of-the-day) extensions.
 
+### Documentation
+
+- How to install hBlock: copied and pasted staright from hBlock's [README](https://github.com/hectorm/hblock/?tab=readme-ov-file#installation) and [docs](https://github.com/hectorm/hblock/blob/master/PACKAGES.md)
+
 ## Gratitude
 
 This project would not exist if it weren't for hblock, so I thank its maintainer and all its contributors. I'm also grateful to everyone in the GNOME Extensions matrix room, who kindly answered the many questions that came up while I was writing this program.
