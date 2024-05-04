@@ -80,6 +80,7 @@ env MUTTER_DEBUG_DUMMY_MODE_SPECS=1024x768 dbus-run-session -- gnome-shell --nes
 ### Code
 
 - Run shell commands asynchronously: heavily inspired by the [GJS documentation examples](https://gjs.guide/guides/gio/subprocesses.html) as well as by the [RunCommand plugin for GSConnect](https://github.com/GSConnect/gnome-shell-extension-gsconnect/blob/main/src/service/plugins/runcommand.js).
+- Send customized notifications: reused from [gnome-shell-extensions-gravatar](https://github.com/dsheeler/gnome-shell-extensions-gravatar) and [gnome-shell-extension-picture-of-the-day](https://github.com/swsnr/gnome-shell-extension-picture-of-the-day).
 - Assign a custom icon to the Quick Settings toggle: based on the codebase from [Caffeine](https://github.com/eonpatapon/gnome-shell-extension-caffeine).
 
 ## Gratitude
