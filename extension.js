@@ -119,7 +119,7 @@ class BlockerRunner {
         let available;
 
         if (GLib.find_program_in_path("hblock") === null) {
-            this._notifier.notifyException("Missing dependency", `Executable "hblock" was not found in $PATH`)
+            this._notifier.notifyException("hBlock not installed", `Click here to get help: https://github.com/pesader/gnome-shell-extension-blocker/wiki/Troubleshooting`)
             available = false;
         } else
             available = true;
