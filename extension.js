@@ -185,7 +185,6 @@ const BlockerToggle = GObject.registerClass(
                 toggleMode: false,
             });
 
-            // Bind the toggle to a GSettings key
             this._settings = settings;
             this._settings.bind(
                 'blocker-enabled',
@@ -201,19 +200,11 @@ const BlockerIndicator = GObject.registerClass(
         constructor(settings, icons, notifier, runner) {
             super();
 
-            // Icons
             this._icons = icons
-
-            // Notifier
             this._notifier = notifier
-
-            // Runner
             this._runner = runner
-
-            // Indicator
             this._indicator = this._addIndicator();
 
-            // Toggle
             this._toggle = new BlockerToggle(settings);
             this._toggle.connect('clicked', () => this._onClicked());
             this._toggle.connect('notify::checked', () => this._onChecked());
