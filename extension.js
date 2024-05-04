@@ -42,7 +42,7 @@ class BlockerIcons {
     }
 
     get brand() {
-        return this.enabled
+        return this.enabled;
     }
 
     select(enabled) {
@@ -54,22 +54,22 @@ class BlockerIcons {
 
     destroy() {
         if (this.enabled)
-            this.enabled = null
+            this.enabled = null;
 
         if (this.disabled)
-            this.disabled = null
+            this.disabled = null;
 
         if (this.acquiring)
-            this.acquiring = null
+            this.acquiring = null;
 
         if (this.failure)
-            this.failure = null
+            this.failure = null;
     }
 }
 
 class BlockerNotifier {
     constructor(icons) {
-        this._icons = icons
+        this._icons = icons;
         this._notificationSource = new MessageTray.Source({
             title: 'Blocker',
             icon: this._icons.brand,
@@ -78,51 +78,52 @@ class BlockerNotifier {
     }
 
     _notify(title, body, gicon) {
-        const notification = new MessageTray.Notification({
-            source: this._notificationSource,
-            title: title,
-            body: body,
-            gicon: gicon,
-        });
+        const notification = new MessageTray.Notification(
+            this._notificationSource,
+            title,
+            body,
+            gicon
+        );
         this._notificationSource.addNotification(notification);
     }
 
     notifyStatus(status) {
-        const icon = this._icons.select(status)
-        const direction = status ? "up" : "down"
-        const action = status ? "enabled" : "disabled"
-        this._notify(`Shields ${direction}`, `Content blocking has been ${action}`, icon)
+        const icon = this._icons.select(status);
+        const direction = status ? 'up' : 'down';
+        const action = status ? 'enabled' : 'disabled';
+        this._notify(`Shields ${direction}`, `Content blocking has been ${action}`, icon);
     }
 
     notifyException(title, message) {
-        this._notify(`Error: ${title}`, message, this._icons.failure)
+        this._notify(`Error: ${title}`, message, this._icons.failure);
     }
 
     destroy() {
         if (this._icons) {
-            this._icons.destroy()
-            this._icons = null
+            this._icons.destroy();
+            this._icons = null;
         }
         if (this._notificationSource) {
-            this._notificationSource.destroy()
-            this._notificationSource = null
+            this._notificationSource.destroy();
+            this._notificationSource = null;
         }
     }
 }
 
 class BlockerRunner {
     constructor(notifier) {
-        this._notifier = notifier
+        this._notifier = notifier;
     }
 
     hblockAvailable() {
         let available;
 
-        if (GLib.find_program_in_path("hblock") === null) {
-            this._notifier.notifyException("hBlock not installed", `Click here to get help: https://github.com/pesader/gnome-shell-extension-blocker/wiki/Troubleshooting`)
+        if (GLib.find_program_in_path('hblock') === null) {
+            this._notifier.notifyException('hBlock not installed', 'Click here to get help: https://github.com/pesader/gnome-shell-extension-blocker/wiki/Troubleshooting');
             available = false;
-        } else
+        } else {
             available = true;
+        }
 
         return available;
     }
@@ -160,19 +161,18 @@ class BlockerRunner {
             success = await proc.wait_check_async(null);
 
             if (!success)
-                this._notifier.notifyException(`Failed to run "${command}"`, "Process existed with non-zero code")
-
+                this._notifier.notifyException(`Failed to run "${command}"`, 'Process existed with non-zero code');
         } catch (e) {
-            this._notifier.notifyException(`Could not run "${command}"`, e.message)
+            this._notifier.notifyException(`Could not run "${command}"`, e.message);
             console.debug(e);
         }
-        return success
+        return success;
     }
 
     destroy() {
         if (this._notifier) {
-            this._notifier.destroy()
-            this._notifier = null
+            this._notifier.destroy();
+            this._notifier = null;
         }
     }
 }
@@ -200,13 +200,13 @@ const BlockerIndicator = GObject.registerClass(
         constructor(settings, icons, notifier, runner) {
             super();
 
-            this._icons = icons
-            this._notifier = notifier
-            this._runner = runner
+            this._icons = icons;
+            this._notifier = notifier;
+            this._runner = runner;
             this._indicator = this._addIndicator();
             this._netman = Gio.network_monitor_get_default();
 
-            this._netman.connect('network-changed', (_monitor, _network_available) => this._onNetworkChanged());
+            this._netman.connect('network-changed', (_monitor, _networkAvailable) => this._onNetworkChanged());
 
             this._toggle = new BlockerToggle(settings);
             this._toggle.connect('clicked', () => this._onClicked());
@@ -218,9 +218,9 @@ const BlockerIndicator = GObject.registerClass(
                 GObject.BindingFlags.SYNC_CREATE
             );
 
-            const icon = this._icons.select(this._toggle.checked)
-            this._indicator.gicon = icon
-            this._toggle.gicon = icon
+            const icon = this._icons.select(this._toggle.checked);
+            this._indicator.gicon = icon;
+            this._toggle.gicon = icon;
 
             this._onNetworkChanged();
 
@@ -229,55 +229,55 @@ const BlockerIndicator = GObject.registerClass(
 
         _onNetworkChanged() {
             if (!this._toggle.checked && !this._netman.network_available) {
-                this._toggle.set_reactive(false)
-                this._toggle.subtitle = "Network unavailable"
+                this._toggle.set_reactive(false);
+                this._toggle.subtitle = 'Network unavailable';
             } else {
-                this._toggle.set_reactive(true)
-                this._toggle.subtitle = null
+                this._toggle.set_reactive(true);
+                this._toggle.subtitle = null;
             }
         }
 
         _onChecked() {
-            this._notifier.notifyStatus(this._toggle.checked)
+            this._notifier.notifyStatus(this._toggle.checked);
 
-            const icon = this._icons.select(this._toggle.checked)
-            this._indicator.gicon = icon
-            this._toggle.gicon = icon
+            const icon = this._icons.select(this._toggle.checked);
+            this._indicator.gicon = icon;
+            this._toggle.gicon = icon;
         }
 
         async _onClicked() {
             // Save current icon to restore in case of failure
-            const restoreIcon = this._toggle.gicon
+            const restoreIcon = this._toggle.gicon;
 
             // While commands are running, change the icons
             this._indicator.gicon = this._icons.acquiring;
             this._toggle.gicon = this._icons.acquiring;
-            this._toggle.set_reactive(false)
+            this._toggle.set_reactive(false);
 
             // Add an explanatory subtitle to the toggle
-            const doing = this._toggle.checked ? "Disabling" : "Enabling"
-            this._toggle.subtitle = `${doing} in progress`
+            const doing = this._toggle.checked ? 'Disabling' : 'Enabling';
+            this._toggle.subtitle = `${doing} in progress`;
 
             // Toggle hblock
-            const success = await this._hblockToggle()
+            const success = await this._hblockToggle();
 
             if (success) {
-                this._toggle.checked = !this._toggle.checked
+                this._toggle.checked = !this._toggle.checked;
             } else {
                 this._indicator.gicon = restoreIcon;
                 this._toggle.gicon = restoreIcon;
             }
 
-            this._toggle.subtitle = null
-            this._toggle.set_reactive(true)
+            this._toggle.subtitle = null;
+            this._toggle.set_reactive(true);
         }
 
         async _hblockToggle() {
             let success;
             if (this._toggle.checked)
-                success = await this._runner.hblockDisable()
+                success = await this._runner.hblockDisable();
             else
-                success = await this._runner.hblockEnable()
+                success = await this._runner.hblockEnable();
             return success;
         }
 
@@ -287,25 +287,25 @@ const BlockerIndicator = GObject.registerClass(
                 this._indicator.destroy();
             }
             if (this._runner) {
-                this._runner.destroy()
-                this._runner = null
+                this._runner.destroy();
+                this._runner = null;
             }
             if (this._notifier) {
-                this._notifier.destroy()
-                this._notifier = null
+                this._notifier.destroy();
+                this._notifier = null;
             }
             if (this._icons) {
-                this._icons.destroy()
-                this._icons = null
+                this._icons.destroy();
+                this._icons = null;
             }
         }
     });
 
 export default class QuickSettingsExampleExtension extends Extension {
     enable() {
-        this._icons = new BlockerIcons(this.path)
-        this._notifier = new BlockerNotifier(this._icons)
-        this._runner = new BlockerRunner(this._notifier)
+        this._icons = new BlockerIcons(this.path);
+        this._notifier = new BlockerNotifier(this._icons);
+        this._runner = new BlockerRunner(this._notifier);
 
         // Check if hBlock is installed
         if (this._runner.hblockAvailable()) {
