@@ -164,7 +164,7 @@ class BlockerRunner {
 
         } catch (e) {
             this._notifier.notifyException(`Could not run "${command}"`, e.message)
-            logError(e);
+            console.debug(e);
         }
         return success
     }
