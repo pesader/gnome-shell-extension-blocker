@@ -6,7 +6,10 @@ A content blocker for your entire computer.
 
 ### Installation
 
-Blocker depends on hblock, which you can install by following the instructions laid out here [here](https://github.com/hectorm/hblock/blob/master/PACKAGES.md). After installing hblock, you can install Blocker itself through the GNOME Extensions website.
+> [!Important]
+> This extension depends on [hBlock](https://github.com/hectorm/hblock/) and will **NOT WORK** if you don't have it installed on your computer. Follow the instructions [here](https://github.com/pesader/gnome-shell-extension-blocker/wiki/Troubleshooting) to install it.
+
+After installing hBlock, you can install Blocker itself through the GNOME Extensions website.
 
 <img height="80" src="assets/ego.png">
 
