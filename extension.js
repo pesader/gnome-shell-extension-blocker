@@ -204,6 +204,9 @@ const BlockerIndicator = GObject.registerClass(
             this._notifier = notifier
             this._runner = runner
             this._indicator = this._addIndicator();
+            this._netman = Gio.network_monitor_get_default();
+
+            this._netman.connect('network-changed', (_monitor, _network_available) => this._onNetworkChanged());
 
             this._toggle = new BlockerToggle(settings);
             this._toggle.connect('clicked', () => this._onClicked());
@@ -219,7 +222,16 @@ const BlockerIndicator = GObject.registerClass(
             this._indicator.gicon = icon
             this._toggle.gicon = icon
 
+            this._onNetworkChanged();
+
             this.quickSettingsItems.push(this._toggle);
+        }
+
+        _onNetworkChanged() {
+            if (!this._toggle.checked && !this._netman.network_available) {
+                this._toggle.set_reactive(false)
+                this._toggle.subtitle = "Network unavailable"
+            }
         }
 
         _onChecked() {
