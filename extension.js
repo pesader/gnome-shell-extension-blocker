@@ -251,6 +251,10 @@ const BlockerIndicator = GObject.registerClass(
             this._toggle.gicon = this._icons.acquiring;
             this._toggle.set_reactive(false)
 
+            // Add an explanatory subtitle to the toggle
+            const doing = this._toggle.checked ? "Disabling" : "Enabling"
+            this._toggle.subtitle = `${doing} in progress`
+
             // Toggle hblock
             const success = await this._hblockToggle()
 
@@ -260,6 +264,8 @@ const BlockerIndicator = GObject.registerClass(
                 this._indicator.gicon = restoreIcon;
                 this._toggle.gicon = restoreIcon;
             }
+
+            this._toggle.subtitle = null
             this._toggle.set_reactive(true)
         }
 
