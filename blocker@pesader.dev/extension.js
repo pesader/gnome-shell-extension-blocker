@@ -78,12 +78,12 @@ class BlockerNotifier {
     }
 
     _notify(title, body, gicon) {
-        const notification = new MessageTray.Notification(
-            this._notificationSource,
+        const notification = new MessageTray.Notification({
+            source: this._notificationSource,
             title,
             body,
-            gicon
-        );
+            gicon,
+        });
         this._notificationSource.addNotification(notification);
     }
 
