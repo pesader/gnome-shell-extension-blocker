@@ -61,7 +61,7 @@ For false positives, report in [hBlock's issue tracker](https://github.com/hecto
 To build and install the extension run:
 
 ```bash
-gnome-extensions pack --force --extra-source=icons &&  gnome-extensions install blocker@pesader.dev.shell-extension.zip --force
+gnome-extensions pack --force --extra-source=icons blocker@pesader.dev &&  gnome-extensions install blocker@pesader.dev.shell-extension.zip --force
 ```
 
 You can run a nested session of GNOME Shell to test the extension out with:
