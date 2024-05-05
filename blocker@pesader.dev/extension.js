@@ -16,166 +16,16 @@
  * SPDX-License-Identifier: GPL-3.0
  */
 import GObject from 'gi://GObject';
-import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import * as MessageTray from 'resource:///org/gnome/shell/ui/messageTray.js';
 
 import {Extension, gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 import {QuickToggle, SystemIndicator} from 'resource:///org/gnome/shell/ui/quickSettings.js';
 
-class BlockerIcons {
-    constructor(path) {
-        this.enabled = Gio.icon_new_for_string(
-            `${path}/icons/blocker-enabled-symbolic.svg`
-        );
-        this.disabled = Gio.icon_new_for_string(
-            `${path}/icons/blocker-disabled-symbolic.svg`
-        );
-        this.acquiring = Gio.icon_new_for_string(
-            `${path}/icons/blocker-acquiring-symbolic.svg`
-        );
-        this.failure = Gio.icon_new_for_string(
-            `${path}/icons/blocker-failure-symbolic.svg`
-        );
-    }
-
-    get brand() {
-        return this.enabled;
-    }
-
-    select(enabled) {
-        if (enabled)
-            return this.enabled;
-        else
-            return this.disabled;
-    }
-
-    destroy() {
-        if (this.enabled)
-            this.enabled = null;
-
-        if (this.disabled)
-            this.disabled = null;
-
-        if (this.acquiring)
-            this.acquiring = null;
-
-        if (this.failure)
-            this.failure = null;
-    }
-}
-
-class BlockerNotifier {
-    constructor(icons) {
-        this._icons = icons;
-        this._notificationSource = new MessageTray.Source({
-            title: 'Blocker',
-            icon: this._icons.brand,
-        });
-        Main.messageTray.add(this._notificationSource);
-    }
-
-    _notify(title, body, gicon) {
-        const notification = new MessageTray.Notification({
-            source: this._notificationSource,
-            title,
-            body,
-            gicon,
-        });
-        this._notificationSource.addNotification(notification);
-    }
-
-    notifyStatus(status) {
-        const icon = this._icons.select(status);
-        const direction = status ? 'up' : 'down';
-        const action = status ? 'enabled' : 'disabled';
-        this._notify(`Shields ${direction}`, `Content blocking has been ${action}`, icon);
-    }
-
-    notifyException(title, message) {
-        this._notify(`Error: ${title}`, message, this._icons.failure);
-    }
-
-    destroy() {
-        if (this._icons) {
-            this._icons.destroy();
-            this._icons = null;
-        }
-        if (this._notificationSource) {
-            this._notificationSource.destroy();
-            this._notificationSource = null;
-        }
-    }
-}
-
-class BlockerRunner {
-    constructor(notifier) {
-        this._notifier = notifier;
-    }
-
-    hblockAvailable() {
-        let available;
-
-        if (GLib.find_program_in_path('hblock') === null) {
-            this._notifier.notifyException('hBlock not installed', 'Click here to get help: https://github.com/pesader/gnome-shell-extension-blocker/wiki/Troubleshooting');
-            available = false;
-        } else {
-            available = true;
-        }
-
-        return available;
-    }
-
-    async hblockEnable() {
-        const HBLOCK_ENABLE = 'pkexec hblock';
-
-        let success = false;
-        if (this.hblockAvailable()) {
-            const command = HBLOCK_ENABLE;
-            success = await this._runCommand(command);
-        }
-        return success;
-    }
-
-    async hblockDisable() {
-        const HBLOCK_DISABLE = 'pkexec hblock -S none -D none';
-
-        let success = false;
-        if (this.hblockAvailable()) {
-            const command = HBLOCK_DISABLE;
-            success = await this._runCommand(command);
-        }
-        return success;
-    }
-
-    async _runCommand(command) {
-        let success = false;
-        try {
-            const proc = Gio.Subprocess.new(
-                ['/bin/sh', '-c', command],
-                Gio.SubprocessFlags.NONE
-            );
-
-            success = await proc.wait_check_async(null);
-
-            if (!success)
-                this._notifier.notifyException(`Failed to run "${command}"`, 'Process existed with non-zero code');
-        } catch (e) {
-            this._notifier.notifyException(`Could not run "${command}"`, e.message);
-            console.debug(e);
-        }
-        return success;
-    }
-
-    destroy() {
-        if (this._notifier) {
-            this._notifier.destroy();
-            this._notifier = null;
-        }
-    }
-}
+import BlockerIcons from './modules/icons.js';
+import BlockerNotifier from './modules/notifier.js';
+import BlockerRunner from './modules/runner.js';
 
 const BlockerToggle = GObject.registerClass(
     class BlockerToggle extends QuickToggle {
