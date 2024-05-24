@@ -78,7 +78,7 @@ const BlockerIndicator = GObject.registerClass(
         }
 
         _onNetworkChanged() {
-            if (!this._toggle.checked && !this._netman.network_available) {
+            if (!this._netman.network_available) {
                 this._toggle.set_reactive(false);
                 this._toggle.subtitle = 'Network unavailable';
             } else {
