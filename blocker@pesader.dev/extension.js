@@ -133,7 +133,7 @@ const BlockerIndicator = GObject.registerClass(
 
         destroy() {
             if (this._indicator) {
-                this._indicator.quickSettingsItems.forEach(item => item.destroy());
+                this.quickSettingsItems.forEach(item => item.destroy());
                 this._indicator.destroy();
             }
             if (this._runner) {
