@@ -26,6 +26,7 @@ import {QuickToggle, SystemIndicator} from 'resource:///org/gnome/shell/ui/quick
 import BlockerIcons from './modules/icons.js';
 import BlockerNotifier from './modules/notifier.js';
 import BlockerRunner from './modules/runner.js';
+import {BlockerState, State} from './modules/state.js';
 
 const BlockerToggle = GObject.registerClass(
     class BlockerToggle extends QuickToggle {
@@ -47,7 +48,7 @@ const BlockerToggle = GObject.registerClass(
 
 const BlockerIndicator = GObject.registerClass(
     class BlockerIndicator extends SystemIndicator {
-        constructor(settings, icons, notifier, runner) {
+        constructor(settings, state, icons, notifier, runner) {
             super();
 
             this._icons = icons;
@@ -67,6 +68,11 @@ const BlockerIndicator = GObject.registerClass(
                 'visible',
                 GObject.BindingFlags.SYNC_CREATE
             );
+
+            // Set initial Blocker state
+            this._state = state;
+            this._state.state = this._toggle.checked ? State.ENABLED : State.DISABLED;
+            this._state.connect('notify::state', () => this._onStateChanged());
 
             const icon = this._icons.select(this._toggle.checked);
             this._indicator.gicon = icon;
@@ -97,30 +103,53 @@ const BlockerIndicator = GObject.registerClass(
         }
 
         async _onClicked() {
-            // Save current icon to restore in case of failure
-            const restoreIcon = this._toggle.gicon;
+            // Save initial state
+            const initialState = this._state.state;
 
-            // While commands are running, change the icons
-            this._indicator.gicon = this._icons.acquiring;
-            this._toggle.gicon = this._icons.acquiring;
-            this._toggle.set_reactive(false);
-
-            // Add an explanatory subtitle to the toggle
-            const doing = this._toggle.checked ? 'Disabling' : 'Enabling';
-            this._toggle.subtitle = `${doing} in progress`;
+            // Set an intermediary state while commands are running
+            this._state.state = this._state.nextState()
 
             // Toggle hblock
             const success = await this._hblockToggle();
 
-            if (success) {
-                this._toggle.checked = !this._toggle.checked;
-            } else {
-                this._indicator.gicon = restoreIcon;
-                this._toggle.gicon = restoreIcon;
-            }
+            if (success)
+                // Proceed to next state
+                this._state.state = this._state.nextState()
+            else
+                // Restore initial state
+                this._state.state = initialState;
+        }
 
-            this._toggle.subtitle = null;
-            this._toggle.set_reactive(true);
+        _onStateChanged() {
+            if (this._state.isIntermediary()) {
+                // While commands are running, change the icons
+                this._indicator.gicon = this._icons.acquiring;
+                this._toggle.gicon = this._icons.acquiring;
+                this._toggle.set_reactive(false);
+
+                // Add an explanatory subtitle to the toggle
+                const doing = this._state.toString()
+                this._toggle.subtitle = `${doing} in progress`;
+            } else {
+                switch (this._state.state) {
+                    case State.DISABLED:
+                        console.log("Blocker: state disabled")
+                        this._toggle.checked = false;
+                        this._indicator.gicon = this._icons.disabled;
+                        this._toggle.gicon = this._icons.disabled;
+                        break;
+                    case State.ENABLED:
+                        console.log("Blocker: state enabled")
+                        this._toggle.checked = true;
+                        this._indicator.gicon = this._icons.enabled;
+                        this._toggle.gicon = this._icons.enabled;
+                        break;
+                }
+
+                // Remove subtitles and make toggle reactive again
+                this._toggle.subtitle = null;
+                this._toggle.set_reactive(true);
+            }
         }
 
         async _hblockToggle() {
@@ -160,7 +189,8 @@ export default class QuickSettingsExampleExtension extends Extension {
 
         // Check if hBlock is installed
         if (this._runner.hblockAvailable()) {
-            this._indicator = new BlockerIndicator(this.getSettings(), this._icons, this._notifier, this._runner);
+            this._state = new BlockerState()
+            this._indicator = new BlockerIndicator(this.getSettings(), this._state, this._icons, this._notifier, this._runner);
             Main.panel.statusArea.quickSettings.addExternalIndicator(this._indicator);
         }
     }
@@ -169,6 +199,11 @@ export default class QuickSettingsExampleExtension extends Extension {
         if (this._indicator) {
             this._indicator.destroy();
             this._indicator = null;
+        }
+
+        if (this._state) {
+            this._state.destroy();
+            this._state = null;
         }
 
         if (this._runner) {
