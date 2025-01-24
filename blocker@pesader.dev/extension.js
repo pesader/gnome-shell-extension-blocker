@@ -62,12 +62,6 @@ const BlockerIndicator = GObject.registerClass(
             this._toggle = new BlockerToggle(settings);
             this._toggle.connect('clicked', () => this._onClicked());
             this._toggle.connect('notify::checked', () => this._onChecked());
-            this._toggle.bind_property(
-                'checked',
-                this._indicator,
-                'visible',
-                GObject.BindingFlags.SYNC_CREATE
-            );
 
             // Set initial Blocker state
             this._state = state;
@@ -123,6 +117,7 @@ const BlockerIndicator = GObject.registerClass(
         _onStateChanged() {
             if (this._state.isIntermediary()) {
                 // While commands are running, change the icons
+                this._indicator.visible = true;
                 this._indicator.gicon = this._icons.acquiring;
                 this._toggle.gicon = this._icons.acquiring;
                 this._toggle.set_reactive(false);
@@ -134,12 +129,14 @@ const BlockerIndicator = GObject.registerClass(
                 switch (this._state.state) {
                     case State.DISABLED:
                         console.log("Blocker: state disabled")
+                        this._indicator.visible = false;
                         this._toggle.checked = false;
                         this._indicator.gicon = this._icons.disabled;
                         this._toggle.gicon = this._icons.disabled;
                         break;
                     case State.ENABLED:
                         console.log("Blocker: state enabled")
+                        this._indicator.visible = false;
                         this._toggle.checked = true;
                         this._indicator.gicon = this._icons.enabled;
                         this._toggle.gicon = this._icons.enabled;
