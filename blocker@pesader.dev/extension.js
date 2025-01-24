@@ -72,6 +72,7 @@ const BlockerIndicator = GObject.registerClass(
             this._indicator.gicon = icon;
             this._toggle.gicon = icon;
 
+            // Check initial network state
             this._onNetworkChanged();
 
             this.quickSettingsItems.push(this._toggle);
