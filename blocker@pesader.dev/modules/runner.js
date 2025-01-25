@@ -43,6 +43,8 @@ export default class BlockerRunner {
 
     async _runCommand(command) {
         let success = false;
+        const title = `could not run "${command}"`;
+
         try {
             const proc = Gio.Subprocess.new(
                 ['/bin/sh', '-c', command],
@@ -52,9 +54,25 @@ export default class BlockerRunner {
             success = await proc.wait_check_async(null);
 
             if (!success)
-                this._notifier.notifyException(`Failed to run "${command}"`, 'Process existed with non-zero code');
+                this._notifier.notifyException(title, 'Process exited with non-zero exit code');
+
         } catch (e) {
-            this._notifier.notifyException(`Could not run "${command}"`, e.message);
+            // HACK: it seems we cannot use "proc.get_exit_status()", because
+            //       the command is running with privilege. As workaround,
+            //       parse the exit code from the exception message.
+
+            // Show custom message for common errors
+            if (e.message.endsWith("12"))
+                this._notifier.notifyException(title, "Network connection lost");
+
+            else if (e.message.endsWith("126"))
+                this._notifier.notifyException(title, "Permission denied");
+
+            // Show default message for all other errors
+            else
+                this._notifier.notifyException(title, e.message);
+
+            // Log error
             console.debug(e);
         }
         return success;
