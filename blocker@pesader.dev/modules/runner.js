@@ -41,7 +41,7 @@ export default class BlockerRunner {
         else if (e.message.endsWith('126'))
             this._notifier.notifyException(title, 'Permission request dismissed');
 
-        // Show custom message for common errors
+        // Show default message for all other errors
         else
             this._notifier.notifyException(title, e.message);
     }
