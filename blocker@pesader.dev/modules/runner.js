@@ -1,6 +1,8 @@
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
 
+import {State} from './state.js';
+
 export default class BlockerRunner {
     constructor(notifier) {
         this._notifier = notifier;
@@ -19,13 +21,44 @@ export default class BlockerRunner {
         return available;
     }
 
+    _hblockNotifyException(state, e) {
+        let action
+        if (state === State.ENABLING)
+            action = "enable"
+        if (state === State.DISABLING)
+            action = "disable"
+
+        const title = `could not ${action} Blocker`
+
+
+        // HACK: it seems we cannot use "proc.get_exit_status()", because
+        //       the command is running with privilege. As workaround,
+        //       parse the exit code from the exception message.
+
+        // Show custom message for common errors
+        if (e.message.endsWith("12"))
+            this._notifier.notifyException(title, "Network connection lost");
+
+        else if (e.message.endsWith("126"))
+            this._notifier.notifyException(title, "Permission request dismissed");
+
+        // Show default message for all other errors
+        else
+            this._notifier.notifyException(title, e.message);
+
+    }
+
     async hblockEnable() {
         const HBLOCK_ENABLE = 'pkexec hblock';
 
         let success = false;
         if (this.hblockAvailable()) {
-            const command = HBLOCK_ENABLE;
-            success = await this._runCommand(command);
+            try {
+                success = await this._runCommand(HBLOCK_ENABLE);
+            }
+            catch (e) {
+                this._hblockNotifyException(State.ENABLING, e)
+            }
         }
         return success;
     }
@@ -35,8 +68,12 @@ export default class BlockerRunner {
 
         let success = false;
         if (this.hblockAvailable()) {
-            const command = HBLOCK_DISABLE;
-            success = await this._runCommand(command);
+            try {
+                success = await this._runCommand(HBLOCK_DISABLE);
+            }
+            catch (e) {
+                this._hblockNotifyException(State.DISABLING, e)
+            }
         }
         return success;
     }
@@ -57,23 +94,11 @@ export default class BlockerRunner {
                 this._notifier.notifyException(title, 'Process exited with non-zero exit code');
 
         } catch (e) {
-            // HACK: it seems we cannot use "proc.get_exit_status()", because
-            //       the command is running with privilege. As workaround,
-            //       parse the exit code from the exception message.
-
-            // Show custom message for common errors
-            if (e.message.endsWith("12"))
-                this._notifier.notifyException(title, "Network connection lost");
-
-            else if (e.message.endsWith("126"))
-                this._notifier.notifyException(title, "Permission denied");
-
-            // Show default message for all other errors
-            else
-                this._notifier.notifyException(title, e.message);
-
             // Log exception
             console.debug(e);
+
+            // Re-throw exception
+            throw e;
         }
         return success;
     }
