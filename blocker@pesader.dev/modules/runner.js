@@ -72,7 +72,7 @@ export default class BlockerRunner {
             else
                 this._notifier.notifyException(title, e.message);
 
-            // Log error
+            // Log exception
             console.debug(e);
         }
         return success;
