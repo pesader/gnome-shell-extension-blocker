@@ -83,8 +83,20 @@ const BlockerIndicator = GObject.registerClass(
                 this._toggle.set_reactive(false);
                 this._toggle.subtitle = 'Network unavailable';
             } else {
-                this._toggle.set_reactive(true);
-                this._toggle.subtitle = null;
+                // NOTE: It is possible that a network drop doesn't make
+                //       Blocker's enablement fail, so it doesn't go back to
+                //       its DISABLED state. Because of that, we need to check
+                //       its state at this point.
+
+                if (this._state.state === State.ENABLING) {
+                    this._toggle.subtitle = "Enabling in progress";
+                    this._indicator.gicon = this._icons.acquiring;
+                    this._toggle.gicon = this._icons.acquiring;
+                }
+                else {
+                    this._toggle.set_reactive(true);
+                    this._toggle.subtitle = null;
+                }
             }
         }
 
