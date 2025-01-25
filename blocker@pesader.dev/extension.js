@@ -136,7 +136,7 @@ const BlockerIndicator = GObject.registerClass(
                         break;
                     case State.ENABLED:
                         console.log("Blocker: state enabled")
-                        this._indicator.visible = false;
+                        this._indicator.visible = true;
                         this._toggle.checked = true;
                         this._indicator.gicon = this._icons.enabled;
                         this._toggle.gicon = this._icons.enabled;
