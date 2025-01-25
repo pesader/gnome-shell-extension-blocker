@@ -34,8 +34,8 @@ First, Blocker uses pkexec (the program that prompts you for your password) to g
 flowchart TD
 
 A["Blocker toggled"] --> B["Gain privilege with pkexec"]
-B -- Blocker disabled --> C["Execute  `hblock -S none -D none`"]
-B -- Blocker enabled --> D["Execute  `hblock`"]
+B -- Blocker disabled --> C["Execute  'hblock -S none -D none'"]
+B -- Blocker enabled --> D["Execute  'hblock'"]
 ```
 
 ### What are its limitations?
