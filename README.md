@@ -70,7 +70,7 @@ You can run a nested session of GNOME Shell to test the extension out with:
 make run
 ```
 
-Before submitting a pull request, make sure you runt the linter with:
+Before submitting a pull request, make sure you run the linter with:
 
 ```bash
 make lint
