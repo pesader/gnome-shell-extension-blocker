@@ -67,7 +67,6 @@ export const BlockerState = GObject.registerClass({
         }
     }
 
-
     isIntermediary() {
         switch (this.state) {
             case State.DISABLED:
