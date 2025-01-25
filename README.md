@@ -58,22 +58,28 @@ For false positives, report in [hBlock's issue tracker](https://github.com/hecto
 
 ## Contributing
 
-To build and install the extension run:
+Build and install the extension with:
 
 ```bash
-gnome-extensions pack --force --extra-source=icons blocker@pesader.dev &&  gnome-extensions install blocker@pesader.dev.shell-extension.zip --force
+make all
 ```
 
 You can run a nested session of GNOME Shell to test the extension out with:
 
 ```bash
-dbus-run-session -- gnome-shell --nested --wayland
+make run
 ```
 
-If you want to change the size of the window of the nested session, set the `MUTTER_DEBUG_DUMMY_MODE_SPECS` environment variable (as advised [here](https://www.youtube.com/watch?v=YjMgtUSYg4w&t=1890s)), like so:
+Before submitting a pull request, make sure you runt the linter with:
 
 ```bash
-env MUTTER_DEBUG_DUMMY_MODE_SPECS=1024x768 dbus-run-session -- gnome-shell --nested --wayland
+make lint
+```
+
+You can also have the linter attempt to fix the errors it found with:
+
+```bash
+make lint-fix
 ```
 
 ## Attribution
@@ -88,6 +94,10 @@ env MUTTER_DEBUG_DUMMY_MODE_SPECS=1024x768 dbus-run-session -- gnome-shell --nes
 
 - Blocker's logo: derived from the [`shield-safe-symbolic`](https://gitlab.gnome.org/World/design/icon-library/-/blob/master/data/resources/icon-dev-kit/shield-safe-symbolic.svg?ref_type=heads) icon, by the GNOME Project.
 - EGO banner: modified from [Just Perfection's work](https://gitlab.gnome.org/jrahmatzadeh/just-perfection/-/blob/main/data/imgs/ego.svg?ref_type=heads).
+
+### Build system
+
+- Makefile: inspired by the Makefile of [Caffeine](https://github.com/eonpatapon/gnome-shell-extension-caffeine/blob/master/Makefile)
 
 ### Documentation
 
