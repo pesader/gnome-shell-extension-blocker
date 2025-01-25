@@ -22,13 +22,13 @@ export default class BlockerRunner {
     }
 
     _hblockNotifyException(state, e) {
-        let action
+        let action;
         if (state === State.ENABLING)
-            action = "enable"
+            action = 'enable';
         if (state === State.DISABLING)
-            action = "disable"
+            action = 'disable';
 
-        const title = `could not ${action} Blocker`
+        const title = `could not ${action} Blocker`;
 
 
         // HACK: it seems we cannot use "proc.get_exit_status()", because
@@ -36,16 +36,14 @@ export default class BlockerRunner {
         //       parse the exit code from the exception message.
 
         // Show custom message for common errors
-        if (e.message.endsWith("12"))
-            this._notifier.notifyException(title, "Network connection lost");
+        if (e.message.endsWith('12'))
+            this._notifier.notifyException(title, 'Network connection lost');
+        else if (e.message.endsWith('126'))
+            this._notifier.notifyException(title, 'Permission request dismissed');
 
-        else if (e.message.endsWith("126"))
-            this._notifier.notifyException(title, "Permission request dismissed");
-
-        // Show default message for all other errors
+        // Show custom message for common errors
         else
             this._notifier.notifyException(title, e.message);
-
     }
 
     async hblockEnable() {
@@ -55,9 +53,8 @@ export default class BlockerRunner {
         if (this.hblockAvailable()) {
             try {
                 success = await this._runCommand(HBLOCK_ENABLE);
-            }
-            catch (e) {
-                this._hblockNotifyException(State.ENABLING, e)
+            } catch (e) {
+                this._hblockNotifyException(State.ENABLING, e);
             }
         }
         return success;
@@ -70,9 +67,8 @@ export default class BlockerRunner {
         if (this.hblockAvailable()) {
             try {
                 success = await this._runCommand(HBLOCK_DISABLE);
-            }
-            catch (e) {
-                this._hblockNotifyException(State.DISABLING, e)
+            } catch (e) {
+                this._hblockNotifyException(State.DISABLING, e);
             }
         }
         return success;
@@ -92,7 +88,6 @@ export default class BlockerRunner {
 
             if (!success)
                 this._notifier.notifyException(title, 'Process exited with non-zero exit code');
-
         } catch (e) {
             // Log exception
             console.debug(e);

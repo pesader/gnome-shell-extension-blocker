@@ -82,21 +82,19 @@ const BlockerIndicator = GObject.registerClass(
             if (!this._netman.network_available) {
                 this._toggle.set_reactive(false);
                 this._toggle.subtitle = 'Network unavailable';
-            } else {
-                // NOTE: It is possible that a network drop doesn't make
-                //       Blocker's enablement fail, so it doesn't go back to
-                //       its DISABLED state. Because of that, we need to check
-                //       its state at this point.
 
-                if (this._state.state === State.ENABLING) {
-                    this._toggle.subtitle = "Enabling in progress";
-                    this._indicator.gicon = this._icons.acquiring;
-                    this._toggle.gicon = this._icons.acquiring;
-                }
-                else {
-                    this._toggle.set_reactive(true);
-                    this._toggle.subtitle = null;
-                }
+            // NOTE: It is possible that a network drop doesn't make
+            //       Blocker's enablement fail, so it doesn't go back to
+            //       its DISABLED state. Because of that, we need to check
+            //       its state at this point.
+            //
+            } else if (this._state.state === State.ENABLING) {
+                this._toggle.subtitle = 'Enabling in progress';
+                this._indicator.gicon = this._icons.acquiring;
+                this._toggle.gicon = this._icons.acquiring;
+            } else {
+                this._toggle.set_reactive(true);
+                this._toggle.subtitle = null;
             }
         }
 
@@ -113,14 +111,14 @@ const BlockerIndicator = GObject.registerClass(
             const initialState = this._state.state;
 
             // Set an intermediary state while commands are running
-            this._state.state = this._state.nextState()
+            this._state.state = this._state.nextState();
 
             // Toggle hblock
             const success = await this._hblockToggle();
 
             if (success)
                 // Proceed to next state
-                this._state.state = this._state.nextState()
+                this._state.state = this._state.nextState();
             else
                 // Restore initial state
                 this._state.state = initialState;
@@ -135,24 +133,24 @@ const BlockerIndicator = GObject.registerClass(
                 this._toggle.set_reactive(false);
 
                 // Add an explanatory subtitle to the toggle
-                const doing = this._state.toString()
+                const doing = this._state.toString();
                 this._toggle.subtitle = `${doing} in progress`;
             } else {
                 switch (this._state.state) {
-                    case State.DISABLED:
-                        console.log("Blocker: state disabled")
-                        this._indicator.visible = false;
-                        this._toggle.checked = false;
-                        this._indicator.gicon = this._icons.disabled;
-                        this._toggle.gicon = this._icons.disabled;
-                        break;
-                    case State.ENABLED:
-                        console.log("Blocker: state enabled")
-                        this._indicator.visible = true;
-                        this._toggle.checked = true;
-                        this._indicator.gicon = this._icons.enabled;
-                        this._toggle.gicon = this._icons.enabled;
-                        break;
+                case State.DISABLED:
+                    console.log('Blocker: state disabled');
+                    this._indicator.visible = false;
+                    this._toggle.checked = false;
+                    this._indicator.gicon = this._icons.disabled;
+                    this._toggle.gicon = this._icons.disabled;
+                    break;
+                case State.ENABLED:
+                    console.log('Blocker: state enabled');
+                    this._indicator.visible = true;
+                    this._toggle.checked = true;
+                    this._indicator.gicon = this._icons.enabled;
+                    this._toggle.gicon = this._icons.enabled;
+                    break;
                 }
 
                 // Remove subtitles and make toggle reactive again
@@ -198,7 +196,7 @@ export default class QuickSettingsExampleExtension extends Extension {
 
         // Check if hBlock is installed
         if (this._runner.hblockAvailable()) {
-            this._state = new BlockerState()
+            this._state = new BlockerState();
             this._indicator = new BlockerIndicator(this.getSettings(), this._state, this._icons, this._notifier, this._runner);
             Main.panel.statusArea.quickSettings.addExternalIndicator(this._indicator);
         }

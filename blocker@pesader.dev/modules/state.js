@@ -1,4 +1,4 @@
-const { GObject } = imports.gi;
+const {GObject} = imports.gi;
 
 // Define the Enum
 export const State = {
@@ -18,7 +18,7 @@ export const BlockerState = GObject.registerClass({
             GObject.ParamFlags.READWRITE,
             State.DISABLED,  // min
             State.DISABLING, // max
-            State.DISABLED,  // default
+            State.DISABLED   // default
         ),
     },
 }, class BlockerState extends GObject.Object {
@@ -42,46 +42,64 @@ export const BlockerState = GObject.registerClass({
     }
 
     toString() {
+        let string;
         switch (this.state) {
-            case State.DISABLED:
-                return 'Disabled'
-            case State.ENABLED:
-                return 'Enabled'
-            case State.DISABLING:
-                return 'Disabling'
-            case State.ENABLING:
-                return 'Enabling'
+        case State.DISABLED:
+            string = 'Disabled';
+            break;
+        case State.ENABLED:
+            string = 'Enabled';
+            break;
+        case State.DISABLING:
+            string = 'Disabling';
+            break;
+        case State.ENABLING:
+            string = 'Enabling';
+            break;
         }
+        return string;
     }
 
     nextState() {
+        let next;
         switch (this.state) {
-            case State.DISABLED:
-                return State.ENABLING;
-            case State.ENABLED:
-                return State.DISABLING;
-            case State.DISABLING:
-                return State.DISABLED;
-            case State.ENABLING:
-                return State.ENABLED;
+        case State.DISABLED:
+            next = State.ENABLING;
+            break;
+        case State.ENABLED:
+            next = State.DISABLING;
+            break;
+        case State.DISABLING:
+            next = State.DISABLED;
+            break;
+        case State.ENABLING:
+            next = State.ENABLED;
+            break;
         }
+        return next;
     }
 
     isIntermediary() {
+        let result;
         switch (this.state) {
-            case State.DISABLED:
-                return false;
-            case State.ENABLED:
-                return false;
-            case State.DISABLING:
-                return true;
-            case State.ENABLING:
-                return true;
+        case State.DISABLED:
+            result = false;
+            break;
+        case State.ENABLED:
+            result = false;
+            break;
+        case State.DISABLING:
+            result = true;
+            break;
+        case State.ENABLING:
+            result = true;
+            break;
         }
+        return result;
     }
 
     destroy() {
         if (this._state)
-            this._state = null
+            this._state = null;
     }
-})
+});
