@@ -65,8 +65,8 @@ const BlockerIndicator = GObject.registerClass(
 
             // Set initial Blocker state
             this._state = state;
-            this._state.state = this._toggle.checked ? State.ENABLED : State.DISABLED;
             this._state.connect('notify::state', () => this._onStateChanged());
+            this._state.state = this._toggle.checked ? State.ENABLED : State.DISABLED;
 
             const icon = this._icons.select(this._toggle.checked);
             this._indicator.gicon = icon;
