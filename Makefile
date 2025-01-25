@@ -3,7 +3,7 @@ EXTENSION_ARCHIVE = "$(EXTENSION_DIR).shell-extension.zip"
 
 all: build install
 
-.PHONY: build install run clean lint lint-fix
+.PHONY: build install run clean lint lint-fix lint-install
 
 build:
 	gnome-extensions pack --force --extra-source=icons --extra-source=modules $(EXTENSION_DIR)
@@ -18,7 +18,10 @@ clean:
 	rm $(EXTENSION_ARCHIVE)
 
 lint:
-	npx eslint "**/*.js" --config .eslintrc.yml
+	npx eslint "**/*.js" --no-warn-ignored
 
 lint-fix:
-	npx eslint "**/*.js" --config .eslintrc.yml --fix
+	npx eslint "**/*.js" --no-warn-ignored --fix
+
+lint-install:
+	npm install --user eslint@9.19.0 eslint-plugin-jsdoc --save-dev
