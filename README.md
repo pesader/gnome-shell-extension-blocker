@@ -6,8 +6,10 @@ A content blocker for your entire computer.
 
 ### Installation
 
+First, you need to install [hBlock](https://hblock.molinero.dev/).
+
 > [!Important]
-> This extension depends on [hBlock](https://github.com/hectorm/hblock/) and will **NOT WORK** if you don't have it installed on your computer. Follow the instructions [here](https://github.com/pesader/gnome-shell-extension-blocker/wiki/Installing-hBlock) to install it.
+> Blocker depends on [hBlock](https://github.com/hectorm/hblock/) and won't work if you haven't installed it on your computer. Follow the instructions [here](https://github.com/pesader/gnome-shell-extension-blocker/wiki/Installing-hBlock) to install it.
 
 After installing hBlock, you can install Blocker itself through the GNOME Extensions website.
 
