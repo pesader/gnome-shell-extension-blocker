@@ -32,4 +32,4 @@ docs:
 	npx jsdoc -c jsdoc.json
 
 docs-install:
-	npm install jsdoc --save-dev
+	npm install jsdoc docdash --save-dev
