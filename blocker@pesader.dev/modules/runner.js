@@ -3,12 +3,29 @@ import Gio from 'gi://Gio';
 
 import {State} from './state.js';
 
-export default class BlockerRunner {
+import {BlockerNotifier as BlockerNotifier_} from './notifier.js';
+import {BlockerState as BlockerState_} from './state.js';
+
+/**
+ * Blocker's command runner.
+ *
+ * @class
+ * @param {BlockerNotifier_} notifier - notification sender.
+ */
+export class BlockerRunner {
     constructor(notifier) {
+        /** @type {BlockerNotifier_} */
         this._notifier = notifier;
     }
 
+    /**
+     * Checks whether the hBlock executable is available or not.
+     * Notifies the user with a helpful message if it isn't.
+     *
+     * @returns {boolean} true if hBlock is available, false otherwise.
+     */
     hblockAvailable() {
+        /** @type {boolean} */
         let available;
 
         if (GLib.find_program_in_path('hblock') === null) {
@@ -21,13 +38,23 @@ export default class BlockerRunner {
         return available;
     }
 
+    /**
+     * Helper for notifying exceptions that may occur while running hBlock.
+     *
+     * @param {BlockerState_} state - either State.ENABLING or State.DISABLING.
+     * @param {Error} e - exception to notify.
+     * @returns {boolean} true if hBlock is available, false otherwise.
+     */
     _hblockNotifyException(state, e) {
+        /** @type {string} */
         let action;
+
         if (state === State.ENABLING)
             action = 'enable';
         if (state === State.DISABLING)
             action = 'disable';
 
+        /** @type {string} */
         const title = `could not ${action} Blocker`;
 
 
@@ -46,10 +73,18 @@ export default class BlockerRunner {
             this._notifier.notifyException(title, e.message);
     }
 
+    /**
+     * Enables hBlock.
+     *
+     * @returns {boolean} true if hBlock was enabled successfully, false otherwise.
+     */
     async hblockEnable() {
+        /** @type {string} */
         const HBLOCK_ENABLE = 'pkexec hblock';
 
+        /** @type {boolean} */
         let success = false;
+
         if (this.hblockAvailable()) {
             try {
                 success = await this._runCommand(HBLOCK_ENABLE);
@@ -60,10 +95,18 @@ export default class BlockerRunner {
         return success;
     }
 
+    /**
+     * Disables hBlock.
+     *
+     * @returns {boolean} true if hBlock was disabled successfully, false otherwise.
+     */
     async hblockDisable() {
+        /** @type {string} */
         const HBLOCK_DISABLE = 'pkexec hblock -S none -D none';
 
+        /** @type {boolean} */
         let success = false;
+
         if (this.hblockAvailable()) {
             try {
                 success = await this._runCommand(HBLOCK_DISABLE);
@@ -74,11 +117,21 @@ export default class BlockerRunner {
         return success;
     }
 
+    /**
+     * Helper for running shell commands
+     *
+     * @param {string} command - shell command to run.
+     * @returns {boolean} true if command ran successfully, false otherwise.
+     */
     async _runCommand(command) {
-        let success = false;
+        /** @type {string} */
         const title = `could not run "${command}"`;
 
+        /** @type {boolean} */
+        let success = false;
+
         try {
+            /** @type {Gio.Subprocess} */
             const proc = Gio.Subprocess.new(
                 ['/bin/sh', '-c', command],
                 Gio.SubprocessFlags.NONE
@@ -98,6 +151,11 @@ export default class BlockerRunner {
         return success;
     }
 
+    /**
+     * Destroys the object.
+     *
+     * @returns {void}
+     */
     destroy() {
         if (this._notifier) {
             this._notifier.destroy();

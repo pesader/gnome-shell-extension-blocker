@@ -3,7 +3,7 @@ EXTENSION_ARCHIVE = "$(EXTENSION_DIR).shell-extension.zip"
 
 all: build install
 
-.PHONY: build install run clean lint lint-fix lint-install
+.PHONY: build install run clean lint lint-fix lint-install docs docs-install
 
 build:
 	gnome-extensions pack --force --extra-source=icons --extra-source=modules $(EXTENSION_DIR)
@@ -25,3 +25,11 @@ lint-fix:
 
 lint-install:
 	npm install --user eslint@9.19.0 eslint-plugin-jsdoc --save-dev
+
+docs:
+	mkdir -p docs/
+	cp -r assets/ docs/
+	npx jsdoc -c jsdoc.json
+
+docs-install:
+	npm install jsdoc --save-dev

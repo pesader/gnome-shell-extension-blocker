@@ -23,11 +23,17 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {Extension, gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 import {QuickToggle, SystemIndicator} from 'resource:///org/gnome/shell/ui/quickSettings.js';
 
-import BlockerIcons from './modules/icons.js';
-import BlockerNotifier from './modules/notifier.js';
-import BlockerRunner from './modules/runner.js';
+import {BlockerIcons} from './modules/icons.js';
+import {BlockerNotifier} from './modules/notifier.js';
+import {BlockerRunner} from './modules/runner.js';
 import {BlockerState, State} from './modules/state.js';
 
+/**
+ * Blocker's toggle.
+ *
+ * @class
+ * @param {Gio.Settings} settings - The extension's settings.
+ */
 const BlockerToggle = GObject.registerClass(
     class BlockerToggle extends QuickToggle {
         constructor(settings) {
@@ -36,6 +42,7 @@ const BlockerToggle = GObject.registerClass(
                 toggleMode: false,
             });
 
+            /** @type {Gio.Settings} */
             this._settings = settings;
             this._settings.bind(
                 'blocker-enabled',
@@ -46,38 +53,63 @@ const BlockerToggle = GObject.registerClass(
         }
     });
 
+/**
+ * Blocker's indicator.
+ *
+ * @class
+ * @param {Gio.Settings} settings - The extension's settings.
+ * @param {BlockerState} state - Blocker's state.
+ * @param {BlockerIcons} icons - Blocker's icons.
+ * @param {BlockerNotifier} notifier - notification sender.
+ * @param {BlockerRunner} runner - command runner.
+ */
 const BlockerIndicator = GObject.registerClass(
     class BlockerIndicator extends SystemIndicator {
         constructor(settings, state, icons, notifier, runner) {
             super();
 
+            /** @type {BlockerIcons} */
             this._icons = icons;
+
+            /** @type {BlockerNotifier} */
             this._notifier = notifier;
+
+            /** @type {BlockerRunner} */
             this._runner = runner;
+
+            /** @type {BlockerIndicator} */
             this._indicator = this._addIndicator();
-            this._netman = Gio.network_monitor_get_default();
 
-            this._netman.connect('network-changed', (_monitor, _networkAvailable) => this._onNetworkChanged());
-
+            /** @type {BlockerToggle} */
             this._toggle = new BlockerToggle(settings);
             this._toggle.connect('clicked', () => this._onClicked());
             this._toggle.connect('notify::checked', () => this._onChecked());
 
             // Set initial Blocker state
+            /** @type {BlockerState} */
             this._state = state;
             this._state.connect('notify::state', () => this._onStateChanged());
             this._state.state = this._toggle.checked ? State.ENABLED : State.DISABLED;
 
+            /** @type {Gio.NetworkMonitor} */
+            this._netman = Gio.network_monitor_get_default();
+            this._netman.connect('network-changed', (_monitor, _networkAvailable) => this._onNetworkChanged());
+            this._onNetworkChanged(); // Check initial network state
+
+            /** @type {Gio.Icon} */
             const icon = this._icons.select(this._toggle.checked);
             this._indicator.gicon = icon;
             this._toggle.gicon = icon;
 
-            // Check initial network state
-            this._onNetworkChanged();
 
             this.quickSettingsItems.push(this._toggle);
         }
 
+        /**
+         * Responds to network changes.
+         *
+         * @returns {void}
+         */
         _onNetworkChanged() {
             if (!this._netman.network_available) {
                 this._toggle.set_reactive(false);
@@ -98,22 +130,35 @@ const BlockerIndicator = GObject.registerClass(
             }
         }
 
+        /**
+         * Responds to checking/unchecking the extension toggle.
+         *
+         * @returns {void}
+         */
         _onChecked() {
             this._notifier.notifyStatus(this._toggle.checked);
 
+            /** @type {Gio.Icon} */
             const icon = this._icons.select(this._toggle.checked);
             this._indicator.gicon = icon;
             this._toggle.gicon = icon;
         }
 
+        /**
+         * Responds to clicks in the extension toggle.
+         *
+         * @returns {void}
+         */
         async _onClicked() {
             // Save initial state
+            /** @type {State} */
             const initialState = this._state.state;
 
             // Set an intermediary state while commands are running
             this._state.state = this._state.nextState();
 
             // Toggle hblock
+            /** @type {boolean} */
             const success = await this._hblockToggle();
 
             if (success)
@@ -124,6 +169,11 @@ const BlockerIndicator = GObject.registerClass(
                 this._state.state = initialState;
         }
 
+        /**
+         * Responds to changes in Blocker's state.
+         *
+         * @returns {void}
+         */
         _onStateChanged() {
             if (this._state.isIntermediary()) {
                 // While commands are running, change the icons
@@ -133,6 +183,7 @@ const BlockerIndicator = GObject.registerClass(
                 this._toggle.set_reactive(false);
 
                 // Add an explanatory subtitle to the toggle
+                /** @type {string} */
                 const doing = this._state.toString();
                 this._toggle.subtitle = `${doing} in progress`;
             } else {
@@ -159,7 +210,13 @@ const BlockerIndicator = GObject.registerClass(
             }
         }
 
+        /**
+         * Toggles hBlock.
+         *
+         * @returns {boolean} true if hBlock was toggled successfully, false otherwise.
+         */
         async _hblockToggle() {
+            /** @type {boolean} */
             let success;
             if (this._toggle.checked)
                 success = await this._runner.hblockDisable();
@@ -168,6 +225,11 @@ const BlockerIndicator = GObject.registerClass(
             return success;
         }
 
+        /**
+         * Destroys the object.
+         *
+         * @returns {void}
+         */
         destroy() {
             if (this._indicator) {
                 this.quickSettingsItems.forEach(item => item.destroy());
@@ -188,7 +250,17 @@ const BlockerIndicator = GObject.registerClass(
         }
     });
 
+/**
+ * Blocker's extension.
+ *
+ * @class
+ */
 export default class QuickSettingsExampleExtension extends Extension {
+    /**
+     * Enable the extension.
+     *
+     * @returns {void}
+     */
     enable() {
         this._icons = new BlockerIcons(this.path);
         this._notifier = new BlockerNotifier(this._icons);
@@ -202,6 +274,20 @@ export default class QuickSettingsExampleExtension extends Extension {
         }
     }
 
+    /**
+     * Disable the extension.
+     *
+     * @returns {void}
+     */
+    disable() {
+        this.destroy();
+    }
+
+    /**
+     * Destroys the object.
+     *
+     * @returns {void}
+     */
     destroy() {
         if (this._indicator) {
             this._indicator.destroy();
@@ -227,9 +313,5 @@ export default class QuickSettingsExampleExtension extends Extension {
             this._icons.destroy();
             this._icons = null;
         }
-    }
-
-    disable() {
-        this.destroy();
     }
 }
