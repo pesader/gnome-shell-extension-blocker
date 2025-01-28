@@ -6,6 +6,7 @@ export default [
   ...gjs,
   ...shell,
   {
+    ignores: ['docs/**'],
     languageOptions: {
       sourceType: 'module',
       ecmaVersion: 2022,
