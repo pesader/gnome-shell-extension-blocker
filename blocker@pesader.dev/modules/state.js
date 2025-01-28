@@ -1,7 +1,10 @@
 const {GObject} = imports.gi;
 
-// Define the Enum
-/** @type {number} */
+/**
+ * Enum of all possible Blocker states.
+ *
+ * @enum {number}
+ */
 export const State = {
     DISABLED: 0,
     ENABLING: 1,
