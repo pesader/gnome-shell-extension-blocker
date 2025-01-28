@@ -24,7 +24,7 @@ jobs:
 
 
       - name: Install apt packages
-      - uses: awalsh128/cache-apt-pkgs-action@latest
+        uses: awalsh128/cache-apt-pkgs-action@latest
         with:
           packages: make npm
           version: 1.0
