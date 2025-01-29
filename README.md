@@ -4,10 +4,10 @@
 
 ### Installation
 
-First, you need to install [hBlock](https://hblock.molinero.dev/).
+First, you need to install [hBlock](https://hblock.molinero.dev/). Follow the instructions [here](https://github.com/pesader/gnome-shell-extension-blocker/wiki/Installing-hBlock) to install it.
 
 > [!Important]
-> Blocker depends on [hBlock](https://github.com/hectorm/hblock/) and won't work if you haven't installed it on your computer. Follow the instructions [here](https://github.com/pesader/gnome-shell-extension-blocker/wiki/Installing-hBlock) to install it.
+> Blocker depends on [hBlock](https://github.com/hectorm/hblock/) and won't work if you haven't installed it on your computer.
 
 After installing hBlock, you can install Blocker itself through the GNOME Extensions website.
 
