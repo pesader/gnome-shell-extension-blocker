@@ -1,3 +1,10 @@
+/**
+ * @file Defines BlockerNotifier.
+ * @author Pedro Sader Azevedo <email@pesader.dev>
+ * @copyright Pedro Sader Azevedo 2025
+ * @license GPL-3.0
+ */
+
 'use strict';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
@@ -30,6 +37,7 @@ export class BlockerNotifier {
      * @param {string} body - the notification body text.
      * @param {Gio.Icon} gicon - the notification icon.
      * @returns {void}
+     * @access protected
      */
     _notify(title, body, gicon) {
         /** @type {MessageTray.Notification} */

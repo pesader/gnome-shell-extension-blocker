@@ -1,3 +1,12 @@
+/**
+ * @file Defines BlockerRunner.
+ * @author Pedro Sader Azevedo <email@pesader.dev>
+ * @copyright Pedro Sader Azevedo 2025
+ * @license GPL-3.0
+ */
+
+'use strict';
+
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
 
@@ -44,6 +53,7 @@ export class BlockerRunner {
      * @param {BlockerState_} state - either State.ENABLING or State.DISABLING.
      * @param {Error} e - exception to notify.
      * @returns {boolean} true if hBlock is available, false otherwise.
+     * @access protected
      */
     _hblockNotifyException(state, e) {
         /** @type {string} */
@@ -122,6 +132,7 @@ export class BlockerRunner {
      *
      * @param {string} command - shell command to run.
      * @returns {boolean} true if command ran successfully, false otherwise.
+     * @access protected
      */
     async _runCommand(command) {
         /** @type {string} */

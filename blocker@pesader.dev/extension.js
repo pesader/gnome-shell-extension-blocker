@@ -1,20 +1,12 @@
-/* extension.js
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * SPDX-License-Identifier: GPL-3.0
+/**
+ * @file Defines BlockerToggle, BlockerIndicator, and BlockerIndicator.
+ * @author Pedro Sader Azevedo <email@pesader.dev>
+ * @copyright Pedro Sader Azevedo 2025
+ * @license GPL-3.0
  */
+
+'use strict';
+
 import GObject from 'gi://GObject';
 import Gio from 'gi://Gio';
 
@@ -109,6 +101,7 @@ const BlockerIndicator = GObject.registerClass(
          * Responds to network changes.
          *
          * @returns {void}
+         * @access protected
          */
         _onNetworkChanged() {
             if (!this._netman.network_available) {
@@ -134,6 +127,7 @@ const BlockerIndicator = GObject.registerClass(
          * Responds to checking/unchecking the extension toggle.
          *
          * @returns {void}
+         * @access protected
          */
         _onChecked() {
             this._notifier.notifyStatus(this._toggle.checked);
@@ -148,6 +142,7 @@ const BlockerIndicator = GObject.registerClass(
          * Responds to clicks in the extension toggle.
          *
          * @returns {void}
+         * @access protected
          */
         async _onClicked() {
             // Save initial state
@@ -173,6 +168,7 @@ const BlockerIndicator = GObject.registerClass(
          * Responds to changes in Blocker's state.
          *
          * @returns {void}
+         * @access protected
          */
         _onStateChanged() {
             if (this._state.isIntermediary()) {
@@ -214,6 +210,7 @@ const BlockerIndicator = GObject.registerClass(
          * Toggles hBlock.
          *
          * @returns {boolean} true if hBlock was toggled successfully, false otherwise.
+         * @access protected
          */
         async _hblockToggle() {
             /** @type {boolean} */

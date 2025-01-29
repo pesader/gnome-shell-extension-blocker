@@ -1,3 +1,12 @@
+/**
+ * @file Defines BlockerIcons.
+ * @author Pedro Sader Azevedo <email@pesader.dev>
+ * @copyright Pedro Sader Azevedo 2025
+ * @license GPL-3.0
+ */
+
+'use strict';
+
 import Gio from 'gi://Gio';
 
 /**
