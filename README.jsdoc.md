@@ -8,7 +8,7 @@ First, you need to install [hBlock](https://hblock.molinero.dev/). Follow the in
 
 <div style="border-left: 4px solid #8250df; padding: 10px; border-radius: 5px;">
   <div style="color: #8250df; font-weight: bold; margin-bottom: 5px;">&#128712; Important</div>
-  <div>Blocker depends on <a href="https://github.com/hectorm/hblock/" target="_blank">hBlock</a> and won't work if you haven't installed it on your computer.
+  <div>Blocker depends on <a href="https://github.com/hectorm/hblock/" target="_blank">hBlock</a> and won't work if you haven't installed it on your computer.</div>
 </div>
 
 After installing hBlock, you can install Blocker itself through the GNOME Extensions website.
