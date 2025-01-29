@@ -6,7 +6,7 @@ all: build install
 .PHONY: build install run clean lint lint-fix lint-install docs docs-install
 
 build:
-	gnome-extensions pack --force --extra-source=icons --extra-source=modules $(EXTENSION_DIR)
+	gnome-extensions pack --force --podir=po --extra-source=icons --extra-source=modules $(EXTENSION_DIR)
 
 install: build
 	gnome-extensions install $(EXTENSION_ARCHIVE) --force

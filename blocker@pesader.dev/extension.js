@@ -106,7 +106,7 @@ const BlockerIndicator = GObject.registerClass(
         _onNetworkChanged() {
             if (!this._netman.network_available) {
                 this._toggle.set_reactive(false);
-                this._toggle.subtitle = 'Network unavailable';
+                this._toggle.subtitle = _('Network unavailable');
 
             // NOTE: It is possible that a network drop doesn't make
             //       Blocker's enablement fail, so it doesn't go back to
@@ -114,7 +114,7 @@ const BlockerIndicator = GObject.registerClass(
             //       its state at this point.
             //
             } else if (this._state.state === State.ENABLING) {
-                this._toggle.subtitle = 'Enabling in progress';
+                this._toggle.subtitle = _('Enabling in progress');
                 this._indicator.gicon = this._icons.acquiring;
                 this._toggle.gicon = this._icons.acquiring;
             } else {
@@ -181,10 +181,10 @@ const BlockerIndicator = GObject.registerClass(
                 // Add an explanatory subtitle to the toggle
                 switch (this._state.state) {
                 case State.ENABLING:
-                    this._toggle.subtitle = 'Enabling in progress';
+                    this._toggle.subtitle = _('Enabling in progress');
                     break;
                 case State.DISABLING:
-                    this._toggle.subtitle = 'Disabling in progress';
+                    this._toggle.subtitle = _('Disabling in progress');
                     break;
                 }
             } else {
@@ -256,6 +256,11 @@ const BlockerIndicator = GObject.registerClass(
  * @class
  */
 export default class QuickSettingsExampleExtension extends Extension {
+    constructor(metadata) {
+        super(metadata);
+        this.initTranslations("blocker@pesader.dev");
+    }
+
     /**
      * Enable the extension.
      *

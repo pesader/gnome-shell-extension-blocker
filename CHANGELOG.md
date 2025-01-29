@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Support for translations (i18n)
+- Translation to Brazilian Portuguese
+
 ## v0.2.1
 
 ### Added
