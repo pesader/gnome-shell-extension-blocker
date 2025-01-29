@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Automatic releases using GitHub Actions
+
 ### Changed
 
 - Compress image assets (logo, banner, etc)
