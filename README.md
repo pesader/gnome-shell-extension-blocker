@@ -1,4 +1,4 @@
-![Blocker banner](./assets/banner-squared.png)
+![Blocker banner](./assets/banner-github.png)
 
 ## Getting started
 
