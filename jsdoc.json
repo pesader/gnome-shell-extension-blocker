@@ -15,7 +15,7 @@
     "openGraph": {
         "title": "Blocker Developer Documentation",
         "type": "website",
-        "image": "./assets/banner-github.png",
+        "image": "/gnome-shell-extension-blocker/assets/banner-github.png",
         "site_name": "Blocker Developer Documentation",
         "url": "https://pesader.dev/gnome-shell-extension-blocker/"
     },
