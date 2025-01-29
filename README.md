@@ -60,10 +60,23 @@ For false positives, report in [hBlock's issue tracker](https://github.com/hecto
 
 ## Contributing
 
-Build and install the extension with:
+### Understanding the codebase
+
+Blocker's code is documented using JSDoc. You can read the documentation directly in the source code, or head to the [Developer Documentation](https://pesader.dev/gnome-shell-extension-blocker/) page.
+
+### Building and installing from source
+
+If you wish to make changes to the Blocker codebase, you will likely want to build it and install it from source. Blocker's source code on hosted on [GitHub](https://github.com/pesader/gnome-shell-extension-blocker). Your first step is cloning Blocker's repository with:
 
 ```bash
-make all
+git clone https://github.com/pesader/gnome-shell-extension-blocker.git
+```
+
+You can then build and install the extension with:
+
+```bash
+cd gnome-shell-extension-blocker
+make build && make install
 ```
 
 You can run a nested session of GNOME Shell to test the extension out with:
@@ -75,8 +88,8 @@ make run
 Before submitting a pull request, make sure you install and run the linter with:
 
 ```bash
-make lint-install
-make lint
+make lint-install # install the linter
+make lint         # run the linter
 ```
 
 You can also have the linter attempt to fix the errors it found with:
@@ -113,4 +126,4 @@ This project would not exist if it weren't for hBlock, so I thank its maintainer
 
 ## License
 
-This project is licensed under the terms of the GPLv3.
+This project is licensed under the terms of the [GPLv3](https://www.gnu.org/licenses/gpl-3.0.txt).
