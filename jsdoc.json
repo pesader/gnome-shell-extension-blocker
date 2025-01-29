@@ -13,7 +13,7 @@
   "docdash": {
     "search": true,
     "openGraph": {
-        "title": "Explore Blocker's codebase and APIs",
+        "title": "Blocker Developer Documentation",
         "type": "website",
         "image": "assets/banner-github.png",
         "site_name": "Blocker Developer Documentation",
