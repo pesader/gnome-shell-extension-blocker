@@ -1,4 +1,4 @@
-![Blocker banner](./assets/banner.png)
+![Blocker banner](./assets/banner-rounded.png)
 
 ## Getting started
 
