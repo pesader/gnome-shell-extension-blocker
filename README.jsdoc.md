@@ -104,6 +104,7 @@ make lint-fix
 ### Assets
 
 - Blocker's logo: derived from the [`shield-safe-symbolic`](https://gitlab.gnome.org/World/design/icon-library/-/blob/master/data/resources/icon-dev-kit/shield-safe-symbolic.svg?ref_type=heads) icon, by the GNOME Project.
+- Blocker's banner: inspired by the banners at [Flathub's home page](https://flathub.org/)
 - EGO banner: modified from [Just Perfection's work](https://gitlab.gnome.org/jrahmatzadeh/just-perfection/-/blob/main/data/imgs/ego.svg?ref_type=heads).
 
 ### Build system
