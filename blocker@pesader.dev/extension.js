@@ -185,14 +185,12 @@ const BlockerIndicator = GObject.registerClass(
             } else {
                 switch (this._state.state) {
                 case State.DISABLED:
-                    console.log('Blocker: state disabled');
                     this._indicator.visible = false;
                     this._toggle.checked = false;
                     this._indicator.gicon = this._icons.disabled;
                     this._toggle.gicon = this._icons.disabled;
                     break;
                 case State.ENABLED:
-                    console.log('Blocker: state enabled');
                     this._indicator.visible = true;
                     this._toggle.checked = true;
                     this._indicator.gicon = this._icons.enabled;
