@@ -258,7 +258,7 @@ const BlockerIndicator = GObject.registerClass(
 export default class QuickSettingsExampleExtension extends Extension {
     constructor(metadata) {
         super(metadata);
-        this.initTranslations("blocker@pesader.dev");
+        this.initTranslations('blocker@pesader.dev');
     }
 
     /**
