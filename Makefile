@@ -15,7 +15,7 @@ run:
 	env MUTTER_DEBUG_DUMMY_MODE_SPECS=1256x768 dbus-run-session -- gnome-shell --nested --wayland
 
 clean:
-	rm $(EXTENSION_ARCHIVE)
+	rm -f $(EXTENSION_ARCHIVE)
 
 lint:
 	npx eslint "**/*.js" --no-warn-ignored
