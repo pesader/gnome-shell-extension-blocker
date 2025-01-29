@@ -10,6 +10,8 @@
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as MessageTray from 'resource:///org/gnome/shell/ui/messageTray.js';
 
+import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
+
 import {BlockerIcons as BlockerIcons_} from './icons.js';
 
 /**
@@ -59,9 +61,9 @@ export class BlockerNotifier {
         /** @type {Gio.Icon} */
         const icon = this._icons.select(status);
         /** @type {string} */
-        const title = status ? 'Shields up' : 'Shields down';
+        const title = status ? _('Shields up') : _('Shields down');
         /** @type {string} */
-        const body = status ? 'Content blocking has been enabled' : 'Content blocking has been disabled';
+        const body = status ? _('Content blocking has been enabled') : _('Content blocking has been disabled');
 
         this._notify(title, body, icon);
     }
@@ -74,12 +76,15 @@ export class BlockerNotifier {
      * @returns {void}
      */
     notifyException(title, message) {
-        // NOTE: It is necessary to disable the "no-useless-concat" eslint rule
+        /* eslint-disable prefer-template */
+        // NOTE: It is necessary to disable the "prefer-template" eslint rule
         //       on the next line, because the string concatenation is needed
         //       for the "Error" string to be translated separately.
 
-        // eslint-disable-next-line no-useless-concat
-        this._notify('Error' + `: ${title}`, message, this._icons.failure);
+        // TRANSLATORS: 'Error' is followed by an error message, for example
+        // 'Error: Child process exited with non-zero code'
+        this._notify(_('Error') + `: ${title}`, message, this._icons.failure);
+        /* eslint-enable prefer-template */
     }
 
     /**

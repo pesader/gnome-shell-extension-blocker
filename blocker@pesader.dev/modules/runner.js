@@ -10,6 +10,8 @@
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
 
+import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
+
 import {State} from './state.js';
 
 import {BlockerNotifier as BlockerNotifier_} from './notifier.js';
@@ -41,13 +43,17 @@ export class BlockerRunner {
         const BLOCKER_TROUBLESHOOTING_URL = 'https://github.com/pesader/gnome-shell-extension-blocker/wiki/Troubleshooting';
 
         if (GLib.find_program_in_path('hblock') === null) {
-            // NOTE: It is necessary to disable the "no-useless-concat" eslint
+            /* eslint-disable prefer-template */
+            // NOTE: It is necessary to disable the "prefer-template" eslint
             //       rule on the next line, because the string concatenation is
             //       needed for the "Click here to get help" string to be
             //       translated separately.
 
-            // eslint-disable-next-line no-useless-concat
-            this._notifier.notifyException('hBlock not installed', 'Click here to get help' + `: ${BLOCKER_TROUBLESHOOTING_URL}`);
+            // TRANSLATORS: 'Click here to get help' is followed by the link to
+            // Blocker's troubleshooting wiki page, like so 'Click here to get help:
+            // https://github.com/pesader/gnome-shell-extension-blocker/wiki/Troubleshooting'
+            this._notifier.notifyException(_('hBlock not installed'), _('Click here to get help') + `: ${BLOCKER_TROUBLESHOOTING_URL}`);
+            /* eslint-enable prefer-template */
             available = false;
         } else {
             available = true;
@@ -66,16 +72,14 @@ export class BlockerRunner {
      */
     _hblockNotifyException(state, e) {
         /** @type {string} */
-        let action;
-
+        let title;
         if (state === State.ENABLING)
-            action = 'enable';
+
+            // TRANSLATORS: do not translate "Blocker"
+            title = _('could not enable Blocker');
         if (state === State.DISABLING)
-            action = 'disable';
-
-        /** @type {string} */
-        const title = `could not ${action} Blocker`;
-
+            // TRANSLATORS: do not translate "Blocker"
+            title = _('could not disable Blocker');
 
         // HACK: it seems we cannot use "proc.get_exit_status()", because
         //       the command is running with privilege. As workaround,
@@ -83,9 +87,9 @@ export class BlockerRunner {
 
         // Show custom message for common errors
         if (e.message.endsWith('12'))
-            this._notifier.notifyException(title, 'Network connection lost');
+            this._notifier.notifyException(title, _('Network connection lost'));
         else if (e.message.endsWith('126'))
-            this._notifier.notifyException(title, 'Permission request dismissed');
+            this._notifier.notifyException(title, _('Permission request dismissed'));
 
         // Show default message for all other errors
         else
@@ -145,7 +149,16 @@ export class BlockerRunner {
      */
     async _runCommand(command) {
         /** @type {string} */
-        const title = `could not run "${command}"`;
+        /* eslint-disable prefer-template */
+        // NOTE: It is necessary to disable the "prefer-template" eslint rule
+        //       on the next line, because the string concatenation is needed
+        //       for the "could not run the command" string to be translated
+        //       separately.
+
+        // TRANSLATORS: 'could not run the command' is followed by a shell
+        // command, for example 'could not run command: "pkexec hblock"'
+        const title = _('could not run the command') + `: "${command}"`;
+        /* eslint-enable prefer-template */
 
         /** @type {boolean} */
         let success = false;
@@ -160,7 +173,9 @@ export class BlockerRunner {
             success = await proc.wait_check_async(null);
 
             if (!success)
-                this._notifier.notifyException(title, 'Process exited with non-zero exit code');
+                // TRANSLATORS: only translate "exit code" if your language
+                // has a well-established technical term for this
+                this._notifier.notifyException(title, _('Process exited with non-zero exit code'));
         } catch (e) {
             // Log exception
             console.debug(e);

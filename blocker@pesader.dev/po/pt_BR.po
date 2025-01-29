@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Blocker 0.2.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-29 18:36-0300\n"
+"POT-Creation-Date: 2025-01-29 20:07-0300\n"
 "PO-Revision-Date: 2025-01-29 18:42-0300\n"
 "Last-Translator: Pedro Sader Azevedo <email@pesader.dev>\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -18,14 +18,77 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: extension.js:109
+#: blocker@pesader.dev/modules/notifier.js:64
+msgid "Shields up"
+msgstr "Escudos levantados"
+
+#: blocker@pesader.dev/modules/notifier.js:64
+msgid "Shields down"
+msgstr "Escudos abaixados"
+
+#: blocker@pesader.dev/modules/notifier.js:66
+msgid "Content blocking has been enabled"
+msgstr "Bloqueamento de conteúdo ativado"
+
+#: blocker@pesader.dev/modules/notifier.js:66
+msgid "Content blocking has been disabled"
+msgstr "Bloqueamento de conteúdo desativado"
+
+#. TRANSLATORS: 'Error' is followed by an error message, for example
+#. 'Error: Child process exited with non-zero code'
+#: blocker@pesader.dev/modules/notifier.js:86
+msgid "Error"
+msgstr "Erro"
+
+#. TRANSLATORS: 'Click here to get help' is followed by the link to
+#. Blocker's troubleshooting wiki page, like so 'Click here to get help:
+#. https://github.com/pesader/gnome-shell-extension-blocker/wiki/Troubleshooting'
+#: blocker@pesader.dev/modules/runner.js:55
+msgid "hBlock not installed"
+msgstr "hBlock não instalado"
+
+#: blocker@pesader.dev/modules/runner.js:55
+msgid "Click here to get help"
+msgstr "Clique aqui para receber ajuda"
+
+#. TRANSLATORS: do not translate "Blocker"
+#: blocker@pesader.dev/modules/runner.js:79
+msgid "could not enable Blocker"
+msgstr "não foi possível ativar o Blocker"
+
+#. TRANSLATORS: do not translate "Blocker"
+#: blocker@pesader.dev/modules/runner.js:82
+msgid "could not disable Blocker"
+msgstr "não foi possível desativar o Blocker"
+
+#: blocker@pesader.dev/modules/runner.js:90
+msgid "Network connection lost"
+msgstr "Conexão com a rede perdida"
+
+#: blocker@pesader.dev/modules/runner.js:92
+msgid "Permission request dismissed"
+msgstr "Solicitação de permissão cancelada"
+
+#. TRANSLATORS: 'could not run the command' is followed by a shell
+#. command, for example 'could not run command: "pkexec hblock"'
+#: blocker@pesader.dev/modules/runner.js:160
+msgid "could not run the command"
+msgstr "não foi possível executar o comando"
+
+#. TRANSLATORS: only translate "exit code" if your language
+#. has a well-established technical term for this
+#: blocker@pesader.dev/modules/runner.js:178
+msgid "Process exited with non-zero exit code"
+msgstr "Processo encerrado com exit code diferente de zero"
+
+#: blocker@pesader.dev/extension.js:109
 msgid "Network unavailable"
 msgstr "Rede indisponível"
 
-#: extension.js:117 extension.js:184
+#: blocker@pesader.dev/extension.js:117 blocker@pesader.dev/extension.js:184
 msgid "Enabling in progress"
 msgstr "Ativação em andamento"
 
-#: extension.js:187
+#: blocker@pesader.dev/extension.js:187
 msgid "Disabling in progress"
 msgstr "Desativação em andamento"
