@@ -16,6 +16,7 @@ run:
 
 clean:
 	rm -f $(EXTENSION_ARCHIVE)
+	rm -rf docs/
 
 lint:
 	npx eslint "**/*.js" --no-warn-ignored
