@@ -48,7 +48,7 @@ Visit https://hblock.molinero.dev, it tells you whether hBlock is active or not.
 
 ### Can I customize the denylist?
 
-Blocker does not provide, not plans to provide, that kind of customization. However, you can do that if you hBlock directly in the terminal, using `-A`, `-D`, and `-S` flags. Run `hblock --help` for more details.
+Blocker does not provide, nor plans to provide, that kind of customization. However, you can do that if you hBlock directly in the terminal, using `-A`, `-D`, and `-S` flags. Run `hblock --help` for more details.
 
 ### Where should I report problems?
 
