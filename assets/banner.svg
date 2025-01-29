@@ -10,7 +10,7 @@
    sodipodi:docname="banner.svg"
    xml:space="preserve"
    inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
-   inkscape:export-filename="banner-github.png"
+   inkscape:export-filename="banner-social-preview.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -176,13 +176,13 @@
      inkscape:groupmode="layer"
      inkscape:label="Image"
      id="g1"><rect
-       style="fill:#c2f0ca;fill-opacity:1;stroke-width:0.868018"
+       style="fill:#c2f0ca;fill-opacity:1;stroke-width:1"
        id="rect5"
        width="1280"
-       height="482.21136"
+       height="640"
        x="0"
-       y="78.89431"
-       ry="63.283184" /><g
+       y="-9.9475983e-14"
+       ry="0" /><g
        id="g2"
        transform="translate(-40)"><g
          id="layer9"
