@@ -87,8 +87,8 @@ make run
 Before submitting a pull request, make sure you install and run the linter with:
 
 ```bash
-make lint-install
-make lint
+make lint-install # install the linter
+make lint         # run the linter
 ```
 
 You can also have the linter attempt to fix the errors it found with:
