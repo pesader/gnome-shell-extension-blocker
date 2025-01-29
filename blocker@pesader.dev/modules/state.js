@@ -73,31 +73,6 @@ export const BlockerState = GObject.registerClass({
     }
 
     /**
-     * Converts the state of the object to a string.
-     *
-     * @returns {string} A string that represents the state of the object.
-     */
-    toString() {
-        /** @type {string} */
-        let string;
-        switch (this.state) {
-        case State.DISABLED:
-            string = 'Disabled';
-            break;
-        case State.ENABLED:
-            string = 'Enabled';
-            break;
-        case State.DISABLING:
-            string = 'Disabling';
-            break;
-        case State.ENABLING:
-            string = 'Enabling';
-            break;
-        }
-        return string;
-    }
-
-    /**
      * Returns the state that would naturally follow the object's current state.
      *
      * @returns {State} the state that follows the object's current state.

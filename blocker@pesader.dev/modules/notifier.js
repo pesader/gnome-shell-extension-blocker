@@ -59,11 +59,11 @@ export class BlockerNotifier {
         /** @type {Gio.Icon} */
         const icon = this._icons.select(status);
         /** @type {string} */
-        const direction = status ? 'up' : 'down';
+        const title = status ? 'Shields up' : 'Shields down';
         /** @type {string} */
-        const action = status ? 'enabled' : 'disabled';
+        const body = status ? 'Content blocking has been enabled' : 'Content blocking has been disabled';
 
-        this._notify(`Shields ${direction}`, `Content blocking has been ${action}`, icon);
+        this._notify(title, body, icon);
     }
 
     /**
@@ -74,7 +74,12 @@ export class BlockerNotifier {
      * @returns {void}
      */
     notifyException(title, message) {
-        this._notify(`Error: ${title}`, message, this._icons.failure);
+        // NOTE: It is necessary to disable the "no-useless-concat" eslint rule
+        //       on the next line, because the string concatenation is needed
+        //       for the "Error" string to be translated separately.
+
+        // eslint-disable-next-line no-useless-concat
+        this._notify('Error' + `: ${title}`, message, this._icons.failure);
     }
 
     /**

@@ -179,9 +179,14 @@ const BlockerIndicator = GObject.registerClass(
                 this._toggle.set_reactive(false);
 
                 // Add an explanatory subtitle to the toggle
-                /** @type {string} */
-                const doing = this._state.toString();
-                this._toggle.subtitle = `${doing} in progress`;
+                switch (this._state.state) {
+                case State.ENABLING:
+                    this._toggle.subtitle = 'Enabling in progress';
+                    break;
+                case State.DISABLING:
+                    this._toggle.subtitle = 'Disabling in progress';
+                    break;
+                }
             } else {
                 switch (this._state.state) {
                 case State.DISABLED:

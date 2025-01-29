@@ -37,8 +37,17 @@ export class BlockerRunner {
         /** @type {boolean} */
         let available;
 
+        /** @type {string} */
+        const BLOCKER_TROUBLESHOOTING_URL = 'https://github.com/pesader/gnome-shell-extension-blocker/wiki/Troubleshooting';
+
         if (GLib.find_program_in_path('hblock') === null) {
-            this._notifier.notifyException('hBlock not installed', 'Click here to get help: https://github.com/pesader/gnome-shell-extension-blocker/wiki/Troubleshooting');
+            // NOTE: It is necessary to disable the "no-useless-concat" eslint
+            //       rule on the next line, because the string concatenation is
+            //       needed for the "Click here to get help" string to be
+            //       translated separately.
+
+            // eslint-disable-next-line no-useless-concat
+            this._notifier.notifyException('hBlock not installed', 'Click here to get help' + `: ${BLOCKER_TROUBLESHOOTING_URL}`);
             available = false;
         } else {
             available = true;
