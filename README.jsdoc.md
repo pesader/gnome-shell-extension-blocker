@@ -1,6 +1,4 @@
-<h1><img height="25" src="assets/blocker.svg"> Blocker</h1>
-
-A content blocker for your entire computer.
+![Blocker banner](./assets/banner.png)
 
 ## Getting started
 
@@ -26,8 +24,6 @@ After installing hBlock, you can install Blocker itself through the GNOME Extens
 </div>
 
 Click the Quick Settings toggle and input your user's password to activate Blocker (it will take a while to download all its denylists). Once Blocker is active, it will display a system indicator of a shield. To turn it off, simply click the toggle and input your password again.
-
-![Screenshot of the Quick Settings menu with the Blocker toggle](assets/screenshot.png)
 
 ## FAQ
 
