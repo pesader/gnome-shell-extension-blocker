@@ -56,11 +56,19 @@ For false positives, report in [hBlock's issue tracker](https://github.com/hecto
 
 ## Contributing
 
-### Understanding the codebase
+### Translating
+
+Blocker can be translated using [Weblate](https://hosted.weblate.org/projects/gnome-shell-extension-blocker/extension/). Here's our progress so far:
+
+[![Translation status](https://hosted.weblate.org/widgets/gnome-shell-extension-blocker/-/multi-auto.svg)](https://hosted.weblate.org/engage/gnome-shell-extension-blocker/)
+
+### Programming
+
+#### Understanding the codebase
 
 Blocker's code is documented using JSDoc. You can read the documentation directly in the source code, or head to the [Developer Documentation](https://pesader.dev/gnome-shell-extension-blocker/) page.
 
-### Building and installing from source
+#### Building and installing from source
 
 If you wish to make changes to the Blocker codebase, you will likely want to build it and install it from source. Blocker's source code on hosted on [GitHub](https://github.com/pesader/gnome-shell-extension-blocker). Your first step is cloning Blocker's repository with:
 
