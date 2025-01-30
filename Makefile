@@ -36,4 +36,4 @@ docs-install:
 	npm install jsdoc docdash --save-dev
 
 pot:
-	xgettext --language=JavaScript --from-code=UTF-8 --output=blocker@pesader.dev/po/blocker@pesader.dev.pot --add-comments=TRANSLATORS $(find . -name "*.js" -not -path "./node_modules/*")
+	xgettext --language=JavaScript --from-code=UTF-8 --output=blocker@pesader.dev/po/blocker@pesader.dev.pot --add-comments=TRANSLATORS $(shell find . -name "*.js" -not -path "./node_modules/*")
