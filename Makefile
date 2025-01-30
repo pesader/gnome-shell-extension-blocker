@@ -3,7 +3,7 @@ EXTENSION_ARCHIVE = "$(EXTENSION_DIR).shell-extension.zip"
 
 all: build install
 
-.PHONY: build install run clean lint lint-fix lint-install docs docs-install
+.PHONY: build install run clean lint lint-fix lint-install docs docs-install pot
 
 build:
 	gnome-extensions pack --force --podir=po --extra-source=icons --extra-source=modules $(EXTENSION_DIR)
@@ -34,3 +34,6 @@ docs:
 
 docs-install:
 	npm install jsdoc docdash --save-dev
+
+pot:
+	xgettext --language=JavaScript --from-code=UTF-8 --output=blocker@pesader.dev/po/blocker@pesader.dev.pot --add-comments=TRANSLATORS $(find . -name "*.js" -not -path "./node_modules/*")
