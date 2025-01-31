@@ -119,7 +119,7 @@ make lint-fix
 ### Build system
 
 - Makefile: inspired by the Makefile of [Caffeine](https://github.com/eonpatapon/gnome-shell-extension-caffeine/blob/master/Makefile)
-- GitHub Actions workflow file: again, inspired [Caffeine](https://github.com/eonpatapon/gnome-shell-extension-caffeine/tree/master/.github/workflows)
+- GitHub Actions workflow for linting: again, inspired [Caffeine](https://github.com/eonpatapon/gnome-shell-extension-caffeine/tree/master/.github/workflows)
 
 ### Documentation
 
