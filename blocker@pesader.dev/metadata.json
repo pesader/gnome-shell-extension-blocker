@@ -6,5 +6,6 @@
     "47"
   ],
   "settings-schema": "org.gnome.shell.extensions.blocker",
-  "gettext-domain": "blocker@pesader.dev"
+  "gettext-domain": "blocker@pesader.dev",
+  "url": "https://github.com/pesader/blocker"
 }
