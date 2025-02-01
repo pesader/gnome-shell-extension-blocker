@@ -234,6 +234,7 @@ const BlockerIndicator = GObject.registerClass(
             if (this._indicator) {
                 this.quickSettingsItems.forEach(item => item.destroy());
                 this._indicator.destroy();
+                this._indicator = null;
             }
             if (this._runner) {
                 this._runner.destroy();
