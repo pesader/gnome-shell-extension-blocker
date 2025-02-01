@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Improved description of extension in metadata
+
 ### Fixed
 
 - Some signals were not disconnected on disable()

@@ -1,6 +1,6 @@
 {
   "name": "Blocker",
-  "description": "Easily toggle domain blocking",
+  "description": "Block content (ads, trackers, malware, etc) across your computer",
   "uuid": "blocker@pesader.dev",
   "shell-version": [
     "47"
