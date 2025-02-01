@@ -232,6 +232,7 @@ const BlockerIndicator = GObject.registerClass(
          */
         destroy() {
             if (this._indicator) {
+                // This destroys the this._toggle object
                 this.quickSettingsItems.forEach(item => item.destroy());
                 this._indicator.destroy();
                 this._indicator = null;
