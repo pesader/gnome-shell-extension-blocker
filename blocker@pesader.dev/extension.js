@@ -249,6 +249,10 @@ const BlockerIndicator = GObject.registerClass(
                 this._icons.destroy();
                 this._icons = null;
             }
+            if (this._state) {
+                this._state.destroy();
+                this._state = null;
+            }
         }
     });
 
