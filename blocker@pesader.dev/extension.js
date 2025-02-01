@@ -253,6 +253,9 @@ const BlockerIndicator = GObject.registerClass(
                 this._state.destroy();
                 this._state = null;
             }
+            if (this._netman)
+                // Don't destroy NetworkMonitor object, only nullify its reference
+                this._netman = null;
         }
     });
 
