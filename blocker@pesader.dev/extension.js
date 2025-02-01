@@ -74,18 +74,18 @@ const BlockerIndicator = GObject.registerClass(
 
             /** @type {BlockerToggle} */
             this._toggle = new BlockerToggle(settings);
-            this._toggle.connect('clicked', () => this._onClicked());
-            this._toggle.connect('notify::checked', () => this._onChecked());
+            this._clickedHandlerId = this._toggle.connect('clicked', () => this._onClicked());
+            this._notifyCheckedHandlerId = this._toggle.connect('notify::checked', () => this._onChecked());
 
             // Set initial Blocker state
             /** @type {BlockerState} */
             this._state = state;
-            this._state.connect('notify::state', () => this._onStateChanged());
+            this._notifyStateHandlerId = this._state.connect('notify::state', () => this._onStateChanged());
             this._state.state = this._toggle.checked ? State.ENABLED : State.DISABLED;
 
             /** @type {Gio.NetworkMonitor} */
             this._netman = Gio.network_monitor_get_default();
-            this._netman.connect('network-changed', (_monitor, _networkAvailable) => this._onNetworkChanged());
+            this._networkChangedHandlerId = this._netman.connect('network-changed', (_monitor, _networkAvailable) => this._onNetworkChanged());
             this._onNetworkChanged(); // Check initial network state
 
             /** @type {Gio.Icon} */
@@ -231,9 +231,17 @@ const BlockerIndicator = GObject.registerClass(
          * @returns {void}
          */
         destroy() {
+            if (this._toggle) {
+                this._toggle.disconnect(this._clickedHandlerId);
+                this._clickedHandlerId = null;
+
+                this._toggle.disconnect(this._notifyCheckedHandlerId);
+                this._notifyCheckedHandlerId = null;
+
+                this._toggle.destroy();
+                this._toggle = null;
+            }
             if (this._indicator) {
-                // This destroys the this._toggle object
-                this.quickSettingsItems.forEach(item => item.destroy());
                 this._indicator.destroy();
                 this._indicator = null;
             }
@@ -250,12 +258,19 @@ const BlockerIndicator = GObject.registerClass(
                 this._icons = null;
             }
             if (this._state) {
+                this._state.disconnect(this._notifyStateHandlerId);
+                this._notifyStateHandlerId = null;
+
                 this._state.destroy();
                 this._state = null;
             }
-            if (this._netman)
-                // Don't destroy NetworkMonitor object, only nullify its reference
+            if (this._netman) {
+                this._netman.disconnect(this._networkChangedHandlerId);
+                this._networkChangedHandlerId = null;
+
+                // There's no need to destroy() this object
                 this._netman = null;
+            }
         }
     });
 
