@@ -3,6 +3,8 @@
   "description": "Block content (ads, trackers, malware, etc) across your computer",
   "uuid": "blocker@pesader.dev",
   "shell-version": [
+    "45",
+    "46",
     "47"
   ],
   "settings-schema": "org.gnome.shell.extensions.blocker",
