@@ -280,11 +280,6 @@ const BlockerIndicator = GObject.registerClass(
  * @class
  */
 export default class BlockerExtension extends Extension {
-    constructor(metadata) {
-        super(metadata);
-        this.initTranslations('blocker@pesader.dev');
-    }
-
     /**
      * Enable the extension.
      *
