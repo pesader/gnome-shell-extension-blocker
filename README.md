@@ -11,7 +11,9 @@ First, you need to install [hBlock](https://hblock.molinero.dev/). Follow the in
 
 After installing hBlock, you can install Blocker itself through the GNOME Extensions website.
 
-<img height="80" src="assets/ego.png">
+<a href="https://extensions.gnome.org/extension/7831/blocker/">
+  <img height="80" src="assets/ego.png">
+</a>
 
 ### Usage
 
