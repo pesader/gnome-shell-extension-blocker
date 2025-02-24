@@ -1,5 +1,31 @@
 ![Blocker banner](./assets/banner-github.png)
 
+Blocker is a GNOME Shell Extension that allows users to easily toggle system-wide content blocking. It uses a program named [hBlock](https://hblock.molinero.dev/) to change your computer's DNS settings, such it does not to connect to domains that are known for serving adverts, trackers, and malware. This strategy of content blocking has its limitations, and you can read more about them [here](https://github.com/pesader/gnome-shell-extension-blocker#what-are-its-limitations).
+
+## Contents
+
+* [Getting started](#getting-started)
+  * [Installation](#installation)
+  * [Usage](#usage)
+* [FAQ](#faq)
+  * [How does it work?](#how-does-it-work)
+  * [What are its limitations?](#what-are-its-limitations)
+  * [How do I know it's working?](#how-do-i-know-its-working)
+  * [Can I customize the denylist?](#can-i-customize-the-denylist)
+  * [Where should I report problems?](#where-should-i-report-problems)
+* [Contributing](#contributing)
+  * [Translating](#translating)
+  * [Programming](#programming)
+    * [Understanding the codebase](#understanding-the-codebase)
+    * [Building and installing from source](#building-and-installing-from-source)
+* [Attribution](#attribution)
+  * [Code](#code)
+  * [Assets](#assets)
+  * [Build system](#build-system)
+  * [Documentation](#documentation)
+* [Gratitude](#gratitude)
+* [License](#license)
+
 ## Getting started
 
 ### Installation
