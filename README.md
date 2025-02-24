@@ -142,6 +142,7 @@ make lint-fix
 
 - Blocker's logo: derived from the [`shield-safe-symbolic`](https://gitlab.gnome.org/World/design/icon-library/-/blob/master/data/resources/icon-dev-kit/shield-safe-symbolic.svg?ref_type=heads) icon, by the GNOME Project.
 - Blocker's banner: inspired by the banners at [Flathub's home page](https://flathub.org/)
+- Extension logo in banner: is the symbolic icon from Matthew Jakeman's [Extension Manager](https://github.com/mjakeman/extension-manager/blob/master/data/icons/com.mattjakeman.ExtensionManager-symbolic.svg)
 - EGO banner: modified from [Just Perfection's work](https://gitlab.gnome.org/jrahmatzadeh/just-perfection/-/blob/main/data/imgs/ego.svg?ref_type=heads).
 
 ### Build system
