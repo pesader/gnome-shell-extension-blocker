@@ -76,11 +76,11 @@ Visit https://hblock.molinero.dev, it tells you whether hBlock is active or not.
 
 ### Can I customize the denylist?
 
-Blocker does not provide, nor plans to provide, that kind of customization. However, you can do that if you hBlock directly in the terminal, using `-A`, `-D`, and `-S` flags. Run `hblock --help` for more details.
+Blocker does not provide, nor plans to provide, that kind of customization. However, you can do that if you use hBlock directly in the terminal, using `-A`, `-D`, and `-S` flags. Run `hblock --help` for more details.
 
 ### Where should I report problems?
 
-For false positives, report in [hBlock's issue tracker](https://github.com/hectorm/hblock/issues). For everything else, report in [Blocker's issue tracker](https://github.com/pesader/gnome-shell-extension-blocker/issues).
+For false positives (i.e. a legimate site is being mistakenly blocked), report in [hBlock's issue tracker](https://github.com/hectorm/hblock/issues). For everything else, report in [Blocker's issue tracker](https://github.com/pesader/gnome-shell-extension-blocker/issues).
 
 ## Contributing
 
