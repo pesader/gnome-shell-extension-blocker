@@ -24,12 +24,20 @@ export class BlockerNotifier {
     constructor(icons) {
         /** @type {BlockerIcons_} */
         this._icons = icons;
+        this._source = null;
+    }
 
-        this._notificationSource = new MessageTray.Source({
+    get source() {
+        if (this._source) return this._source;
+
+        this._source = new MessageTray.Source({
             title: 'Blocker',
             icon: this._icons.brand,
         });
-        Main.messageTray.add(this._notificationSource);
+
+        this._source.connect('destroy', () => (this._source = null));
+        Main.messageTray.add(this._source);
+        return this._source;
     }
 
     /**
@@ -43,13 +51,14 @@ export class BlockerNotifier {
      */
     _notify(title, body, gicon) {
         /** @type {MessageTray.Notification} */
+        const source = this.source;
         const notification = new MessageTray.Notification({
-            source: this._notificationSource,
+            source: source,
             title,
             body,
             gicon,
         });
-        this._notificationSource.addNotification(notification);
+        source.addNotification(notification);
     }
 
     /**
@@ -97,9 +106,9 @@ export class BlockerNotifier {
             this._icons.destroy();
             this._icons = null;
         }
-        if (this._notificationSource) {
-            this._notificationSource.destroy();
-            this._notificationSource = null;
+        if (this._source) {
+            this._source.destroy();
+            this._source = null;
         }
     }
 }
