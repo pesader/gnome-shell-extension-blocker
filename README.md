@@ -136,7 +136,7 @@ make lint-fix
 
 - Assign a custom icon to a Quick Settings toggle: based on the codebase from [Caffeine](https://github.com/eonpatapon/gnome-shell-extension-caffeine).
 - Run shell commands asynchronously: heavily inspired by the [GJS docs](https://gjs.guide/guides/gio/subprocesses.html) and [GSConnect](https://github.com/GSConnect/gnome-shell-extension-gsconnect/blob/main/src/service/plugins/runcommand.js).
-- Send customized notifications: reused from [Gravatar](https://github.com/dsheeler/gnome-shell-extensions-gravatar) and [Picture of the day](https://github.com/swsnr/gnome-shell-extension-picture-of-the-day) extensions.
+- Send customized notifications: reused from [Gravatar](https://github.com/dsheeler/gnome-shell-extensions-gravatar), [Picture of the day](https://github.com/swsnr/gnome-shell-extension-picture-of-the-day), and [Copyous](https://github.com/boerdereinar/copyous) extensions.
 
 ### Assets
 
