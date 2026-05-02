@@ -12,7 +12,7 @@ build:
 install: build
 	gnome-extensions install $(EXTENSION_ARCHIVE) --force
 
-run:
+run: install
 	./scripts/run-gnome-shell.sh --toolbox=gnome-shell-$(SHELL_VERSION)
 
 clean:
