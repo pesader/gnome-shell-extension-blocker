@@ -4,7 +4,7 @@ SHELL_VERSION ?= 50
 
 all: build install
 
-.PHONY: build install run clean lint lint-fix lint-install docs docs-install pot
+.PHONY: build install run clean lint eslint-lint eslint-fix eslint-install shexli-lint shexli-install docs docs-install pot
 
 build:
 	gnome-extensions pack --force --podir=po --extra-source=icons --extra-source=modules $(EXTENSION_DIR)
@@ -19,22 +19,35 @@ clean:
 	rm -f $(EXTENSION_ARCHIVE)
 	rm -rf docs/
 
+eslint-install:
+	pnpm add -D eslint@9.19.0 eslint-plugin-jsdoc
+
+eslint-lint: eslint-install
+	pnpm exec eslint "$(EXTENSION_DIR)/**/*.js" --no-warn-ignored
+
+eslint-fix: eslint-install
+	pnpm exec eslint "$(EXTENSION_DIR)/**/*.js" --no-warn-ignored --fix
+
+shexli-install:
+	uv sync
+
+shexli-lint: shexli-install build
+	uv run shexli ${EXTENSION_ARCHIVE}
+
 lint:
-	npx eslint "**/*.js" --no-warn-ignored
+	@echo "Running ESLint..."
+	@$(MAKE) eslint-lint
+	@echo ""
+	@echo "Running Shexli..."
+	@$(MAKE) shexli-lint
 
-lint-fix:
-	npx eslint "**/*.js" --no-warn-ignored --fix
-
-lint-install:
-	npm install --user eslint@9.19.0 eslint-plugin-jsdoc --save-dev
-
-docs:
+docs: docs-install
 	mkdir -p docs/
 	cp -r assets/ docs/
-	npx jsdoc -c jsdoc.json
+	pnpm exec jsdoc -c jsdoc.json
 
 docs-install:
-	npm install jsdoc docdash --save-dev
+	pnpm add -D jsdoc docdash
 
 pot:
 	xgettext --language=JavaScript --from-code=UTF-8 --output=blocker@pesader.dev/po/blocker@pesader.dev.pot --add-comments=TRANSLATORS $(shell find . -name "*.js" -not -path "./node_modules/*")

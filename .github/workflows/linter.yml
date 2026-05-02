@@ -1,27 +1,58 @@
-# Run eslint on the codebase
 name: Lint codebase
 
 on:
   pull_request:
-    branches: '**'
+    branches:
+      - '**'
   push:
     branches:
       - '**'
 
 jobs:
-  lint:
+  eslint:
+    name: ESLint
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: awalsh128/cache-apt-pkgs-action@latest
-      with:
-        packages: make npm
-        version: 1.0
-    - name: Install eslint
-      run: |
-        make lint-install
+      - uses: actions/checkout@v4
 
-    - name: Run linter target
-      run: |
-        make lint
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install ESLint dependencies
+        run: make eslint-install
+
+      - name: Run ESLint
+        run: make eslint-lint
+
+  shexli:
+    name: Shexli
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install GNOME Shell tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gnome-shell gettext
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install Shexli dependencies
+        run: make shexli-install
+
+      - name: Build Extension Archive
+        run: make build
+
+      - name: Run Shexli
+        run: make shexli-lint
