@@ -12,7 +12,7 @@ install: build
 	gnome-extensions install $(EXTENSION_ARCHIVE) --force
 
 run:
-	env MUTTER_DEBUG_DUMMY_MODE_SPECS=1256x768 dbus-run-session -- gnome-shell --nested --wayland
+	env MUTTER_DEBUG_DUMMY_MODE_SPECS=1256x768 dbus-run-session -- gnome-shell --devkit --wayland
 
 clean:
 	rm -f $(EXTENSION_ARCHIVE)
