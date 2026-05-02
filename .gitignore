@@ -1,8 +1,21 @@
+# Extension bundle
 *.zip
+
+# JavaScript tooling
 node_modules/
 package-lock.json
 package.json
+
+# Generated docs
 docs/
 
-# gettext backup files
+# Backup files from gettext
 *~
+
+# Python tooling (shexli)
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
