@@ -1,5 +1,6 @@
 EXTENSION_DIR = "blocker@pesader.dev"
 EXTENSION_ARCHIVE = "$(EXTENSION_DIR).shell-extension.zip"
+SHELL_VERSION ?= 50
 
 all: build install
 
@@ -12,7 +13,7 @@ install: build
 	gnome-extensions install $(EXTENSION_ARCHIVE) --force
 
 run:
-	env MUTTER_DEBUG_DUMMY_MODE_SPECS=1256x768 dbus-run-session -- gnome-shell --devkit --wayland
+	./scripts/run-gnome-shell.sh --toolbox=gnome-shell-$(SHELL_VERSION)
 
 clean:
 	rm -f $(EXTENSION_ARCHIVE)
