@@ -22,14 +22,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-
-      - name: Install apt packages
-        uses: awalsh128/cache-apt-pkgs-action@latest
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
         with:
-          packages: make npm
-          version: 1.0
+          version: 9
 
-      - name: Install npm packages
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install documentation dependencies
         run: make docs-install
 
       - name: Generate documentation
