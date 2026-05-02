@@ -110,7 +110,7 @@ export class BlockerRunner {
 
         if (this.hblockAvailable()) {
             try {
-                success = await this._runCommand(HBLOCK_ENABLE);
+                success = this._runCommand(HBLOCK_ENABLE);
             } catch (e) {
                 this._hblockNotifyException(State.ENABLING, e);
             }
@@ -132,7 +132,7 @@ export class BlockerRunner {
 
         if (this.hblockAvailable()) {
             try {
-                success = await this._runCommand(HBLOCK_DISABLE);
+                success = this._runCommand(HBLOCK_DISABLE);
             } catch (e) {
                 this._hblockNotifyException(State.DISABLING, e);
             }
