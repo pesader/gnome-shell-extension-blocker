@@ -28,7 +28,8 @@ export class BlockerNotifier {
     }
 
     get source() {
-        if (this._source) return this._source;
+        if (this._source)
+            return this._source;
 
         this._source = new MessageTray.Source({
             title: 'Blocker',
@@ -53,7 +54,7 @@ export class BlockerNotifier {
         /** @type {MessageTray.Notification} */
         const source = this.source;
         const notification = new MessageTray.Notification({
-            source: source,
+            source,
             title,
             body,
             gicon,

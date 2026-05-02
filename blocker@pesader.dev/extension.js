@@ -154,7 +154,7 @@ const BlockerIndicator = GObject.registerClass(
 
             // Toggle hblock
             /** @type {boolean} */
-            const success = this._hblockToggle();
+            const success = await this._hblockToggle();
 
             if (success)
                 // Proceed to next state
@@ -219,9 +219,9 @@ const BlockerIndicator = GObject.registerClass(
             /** @type {boolean} */
             let success;
             if (this._toggle.checked)
-                success = this._runner.hblockDisable();
+                success = await this._runner.hblockDisable();
             else
-                success = this._runner.hblockEnable();
+                success = await this._runner.hblockEnable();
             return success;
         }
 
