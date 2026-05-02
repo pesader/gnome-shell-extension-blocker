@@ -7,13 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0]
+
+### Added
+
+- Linting with Shexli
+- Scripts for running GNOME Shell in devkit mode
+
 ### Changed
 
 - Improved description of extension in metadata
+- Migrated from `npm` to `pnpm` for running `eslint`
 
 ### Fixed
 
-- Some signals were not disconnected on disable()
+- Some signals were not disconnected on `disable()`
+- Empty notification tray on startup (https://github.com/pesader/gnome-shell-extension-blocker/issues/47)
 
 ## v1.0.0
 
